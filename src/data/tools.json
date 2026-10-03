@@ -1,0 +1,414 @@
+[
+  {
+    "id": "protegedatos",
+    "code": "P087",
+    "name": "ProtegeDatosLocal",
+    "category": "govtech",
+    "status": "prod",
+    "statusText": "En producción",
+    "desc": "Validador interactivo de 25 preguntas para autodiagnóstico municipal de adecuación a la nueva Ley N° 21.719 de Protección de Datos Personales.",
+    "origin": "Nació tras la publicación de la Ley N° 21.719 al constatar la asimetría de los 345 municipios para costear consultorías privadas de privacidad.",
+    "url": "https://protegedatoslocal.evegat.cl",
+    "likes": 42,
+    "dislikes": 1,
+    "roadmap": {
+      "shipped": [
+        { "title": "Matriz interactiva de 25 preguntas Ley 21.719", "desc": "5 dimensiones de madurez institucional y evaluación de riesgo.", "impact": "alto", "tag": "Normativa" },
+        { "title": "Generador de informe ejecutivo client-side", "desc": "Reporte estructurado para presentar ante Concejo Municipal sin enviar datos a la nube.", "impact": "alto", "tag": "Privacidad" }
+      ],
+      "now": [
+        { "title": "Módulo de Registro de Actividades de Tratamiento (RAT)", "desc": "Plantilla guiada para catalogar bases de datos sensibles en Direcciones Jurídicas y DIDECO.", "impact": "alto", "tag": "Gobernanza" }
+      ],
+      "next": [
+        { "title": "API de autoevaluación para direcciones de informática", "desc": "Endpoints locales para certificar cumplimiento técnico de seguridad.", "impact": "medio", "tag": "Técnico" },
+        { "title": "Plantillas de cláusulas para proveedores de software", "desc": "Adecuación contractual para licitaciones en Mercado Público.", "impact": "medio", "tag": "LegalTech" }
+      ],
+      "later": [
+        { "title": "Integración con ClaveÚnica para trazabilidad de DPO municipal", "desc": "Firma digital de declaraciones de conformidad.", "impact": "alto", "tag": "Interoperabilidad" }
+      ]
+    }
+  },
+  {
+    "id": "ordenanzas",
+    "code": "P090",
+    "name": "Catastro Nacional de Ordenanzas",
+    "category": "govtech",
+    "status": "prod",
+    "statusText": "En producción",
+    "desc": "7.426 normas en las 346 comunas de Chile con SHA-256 inmutable, auditor de las 6 ordenanzas obligatorias y asistente normativo local cero-alucinación.",
+    "origin": "Dispersión absoluta y falta de trazabilidad en la normativa comunal chilena; vecinos y concejales no conocen las normas vigentes.",
+    "url": "https://ordenanzas.evegat.cl",
+    "likes": 58,
+    "dislikes": 2,
+    "roadmap": {
+      "shipped": [
+        { "title": "Ingesta nacional 346 comunas con SHA-256 inmutable", "desc": "Base de datos abierta y trazable de 7.426 normas locales.", "impact": "alto", "tag": "Datos Abiertos" },
+        { "title": "Auditor de las 6 ordenanzas obligatorias por ley", "desc": "Verificador de cumplimiento de la Ley N° 18.695.", "impact": "alto", "tag": "GovTech" },
+        { "title": "Asistente RAG local cero-alucinación", "desc": "Consulta semántica estricta sobre texto normativo verificado.", "impact": "alto", "tag": "IA" }
+      ],
+      "now": [
+        { "title": "Generador de reportes de brecha municipal en PDF", "desc": "Ficha lista para presentar en comisiones de concejo municipal.", "impact": "alto", "tag": "Reportes" }
+      ],
+      "next": [
+        { "title": "API REST pública de ordenanzas comunales", "desc": "Endpoints abiertos para integración con sistemas municipales y academia.", "impact": "alto", "tag": "Interoperabilidad" },
+        { "title": "Detector de contradicciones con nuevas leyes nacionales", "desc": "Alertas automáticas de normas locales desactualizadas.", "impact": "medio", "tag": "LegalTech" }
+      ],
+      "later": [
+        { "title": "Co-redactor asistido de ordenanzas tipo", "desc": "Modelos parametrizados para comunas rurales o con déficit jurídico.", "impact": "alto", "tag": "GovTech" }
+      ]
+    }
+  },
+  {
+    "id": "aprenderia",
+    "code": "P117",
+    "name": "AprenderIA Docente",
+    "category": "docencia",
+    "status": "prod",
+    "statusText": "En producción",
+    "desc": "Plataforma de docencia con IA para la Facultad de Gobierno (U. de Chile). Autodiagnóstico 5D client-side y auditor heurístico de syllabus y pautas.",
+    "origin": "Creciente vulnerabilidad de las evaluaciones universitarias ante respuestas sintéticas de ChatGPT y desorientación docente.",
+    "url": "https://aprenderia.evegat.cl",
+    "likes": 39,
+    "dislikes": 0,
+    "roadmap": {
+      "shipped": [
+        { "title": "Autodiagnóstico 5D de madurez docente con IA", "desc": "Evaluación client-side sin registro obligatorio ni fuga de datos.", "impact": "alto", "tag": "Docencia" },
+        { "title": "Auditor heurístico de pautas de examen", "desc": "Detección de preguntas vulnerables a respuesta sintética directa.", "impact": "alto", "tag": "IA" }
+      ],
+      "now": [
+        { "title": "Generador de cláusulas de transparencia de IA", "desc": "Plantillas oficiales para incorporar en programas de curso FAGOB.", "impact": "medio", "tag": "Normativa" }
+      ],
+      "next": [
+        { "title": "Simulador de respuestas sintéticas de estudiantes", "desc": "Permite al docente probar la resistencia de su prueba antes de aplicarla.", "impact": "alto", "tag": "Innovación" }
+      ],
+      "later": [
+        { "title": "Repositorio federado de secuencias pedagógicas con IA", "desc": "Casos de estudio replicables en carreras de Administración Pública.", "impact": "medio", "tag": "Comunidad" }
+      ]
+    }
+  },
+  {
+    "id": "eduvocacion",
+    "code": "P113",
+    "name": "EduVocación",
+    "category": "docencia",
+    "status": "prod",
+    "statusText": "En producción",
+    "desc": "Modelo predictivo de educación y comparador de trayectorias formativas con datos abiertos del Mineduc (Machine Learning interpretativo).",
+    "origin": "Falta de orientación basada en evidencia para estudiantes de liceos públicos y alta tasa de deserción en primer año.",
+    "url": "https://eduvocacion.evegat.cl",
+    "likes": 19,
+    "dislikes": 1,
+    "roadmap": {
+      "shipped": [
+        { "title": "Modelo predictivo Random Forest sobre datos Mineduc", "desc": "Identificación de factores críticos de retención formativa.", "impact": "alto", "tag": "Machine Learning" }
+      ],
+      "now": [
+        { "title": "Comparador de empleabilidad y retorno socio-laboral", "desc": "Visualizador transparente sin sesgos comerciales de universidades.", "impact": "alto", "tag": "Datos" }
+      ],
+      "next": [
+        { "title": "Recomendador de beneficios estudiantiles y FUAS", "desc": "Guía paso a paso según Registro Social de Hogares.", "impact": "medio", "tag": "Orientación" }
+      ],
+      "later": [
+        { "title": "Integración con Sistema de Admisión Escolar (SAE)", "desc": "Módulo predictivo para directores de colegios municipales.", "impact": "alto", "tag": "GovTech" }
+      ]
+    }
+  },
+  {
+    "id": "redar",
+    "code": "P120",
+    "name": "Web Fundación REDAR",
+    "category": "civiltech",
+    "status": "prod",
+    "statusText": "En producción",
+    "desc": "Plataforma web accesible WCAG AAA nativa para red de salud comunitaria y discapacidad. Cero dependencias pesadas.",
+    "origin": "Exclusión digital severa en sitios web de salud comunitaria para personas con discapacidad visual y motriz.",
+    "url": "https://fundacionredar.cl",
+    "likes": 27,
+    "dislikes": 0,
+    "roadmap": {
+      "shipped": [
+        { "title": "Portal WCAG AAA con contraste y navegación por teclado", "desc": "Cero barreras de acceso y rendimiento ultra-rápido en móviles.", "impact": "alto", "tag": "Accesibilidad" }
+      ],
+      "now": [
+        { "title": "Agenda accesible de operativos comunitarios", "desc": "Sistema de reserva asistida con síntesis de voz.", "impact": "medio", "tag": "Salud" }
+      ],
+      "next": [
+        { "title": "Módulo de registro seguro de pacientes Ley 21.719", "desc": "Disociación técnica de datos clínicos sensibles.", "impact": "alto", "tag": "Privacidad" }
+      ],
+      "later": [
+        { "title": "Traductor a Lengua de Señas Chilena (LSCh)", "desc": "Cápsulas de video integradas para trámites principales.", "impact": "medio", "tag": "Inclusión" }
+      ]
+    }
+  },
+  {
+    "id": "wazapeo",
+    "code": "P092",
+    "name": "Wazapeo",
+    "category": "civiltech",
+    "status": "prod",
+    "statusText": "En producción",
+    "desc": "Radar de compromisos y triaje de mensajería ciudadana de WhatsApp montado en Docker local para evitar olvidos institucionales.",
+    "origin": "La mayoría de los compromisos informales entre autoridades y vecinos mueren sepultados en chats de WhatsApp no auditables.",
+    "url": "https://wazapeo.evegat.cl",
+    "likes": 15,
+    "dislikes": 3,
+    "roadmap": {
+      "shipped": [
+        { "title": "Contenedor Docker y sincronización vía QR seguro", "desc": "Procesamiento 100% local sin servidores de terceros.", "impact": "alto", "tag": "Privacidad" },
+        { "title": "Clasificación heurística de compromisos pendientes", "desc": "Extracción automática de plazos y personas involucradas.", "impact": "alto", "tag": "Automatización" }
+      ],
+      "now": [
+        { "title": "Modo Foco (Top 5 del día) con semáforo de urgencia", "desc": "Priorización diaria de respuestas críticas.", "impact": "alto", "tag": "Productividad" }
+      ],
+      "next": [
+        { "title": "Sincronización con Obsidian Daily Notes", "desc": "Exportación de compromisos hacia la bitácora de gestión.", "impact": "medio", "tag": "Integración" }
+      ],
+      "later": [
+        { "title": "Detector de números de decreto y oficios en adjuntos", "desc": "Indexación automática de expedientes municipales recibidos por chat.", "impact": "alto", "tag": "GovTech" }
+      ]
+    }
+  },
+  {
+    "id": "funcionaria",
+    "code": "P023",
+    "name": "Funcionaria.cl",
+    "category": "civiltech",
+    "status": "mov",
+    "statusText": "En movimiento",
+    "desc": "Asistente inteligente de consulta sobre dictámenes de Contraloría y estatuto administrativo para funcionarios públicos.",
+    "origin": "Inseguridad jurídica y asimetría de información en funcionarios a honorarios o contrata ante sumarios y desvinculaciones.",
+    "url": "https://evegat.cl",
+    "likes": 34,
+    "dislikes": 1,
+    "roadmap": {
+      "shipped": [
+        { "title": "Corpus inicial de dictámenes de jurisprudencia CGR", "desc": "Estatuto Administrativo Ley 18.834 y Ley 18.883.", "impact": "alto", "tag": "LegalTech" }
+      ],
+      "now": [
+        { "title": "Calculador de plazos y prescripción de sumarios", "desc": "Verificación de plazos fatales en procesos disciplinarios.", "impact": "alto", "tag": "Derecho Adm" }
+      ],
+      "next": [
+        { "title": "Comparador de criterios jurisprudenciales históricos", "desc": "Evolución de dictámenes de confianza legítima.", "impact": "alto", "tag": "Investigación" }
+      ],
+      "later": [
+        { "title": "Generador guiado de presentaciones a Contraloría", "desc": "Estructuración formal de descargos conforme a derecho.", "impact": "medio", "tag": "GovTech" }
+      ]
+    }
+  },
+  {
+    "id": "sabueso",
+    "code": "P135",
+    "name": "El Sabueso de ChileCompra",
+    "category": "civiltech",
+    "status": "proto",
+    "statusText": "Incubando",
+    "desc": "Radar de control social y auditoría algorítmica preventiva sobre compras públicas y licitaciones de Mercado Público.",
+    "origin": "Licitaciones dirigidas, compras fragmentadas bajo 30 UTM y tratos directos injustificados en compras del Estado.",
+    "url": "https://evegat.cl",
+    "likes": 47,
+    "dislikes": 2,
+    "roadmap": {
+      "shipped": [
+        { "title": "Modelo de datos de licitaciones históricas", "desc": "Estructuración de datos abiertos de Mercado Público.", "impact": "medio", "tag": "Datos" }
+      ],
+      "now": [
+        { "title": "Detector de compras fragmentadas bajo 30 UTM", "desc": "Alertas tempranas de fraccionamiento de gasto municipal.", "impact": "alto", "tag": "Transparencia" }
+      ],
+      "next": [
+        { "title": "Boletín semanal de anomalías para periodistas y vecinos", "desc": "Resumen curado por comuna de compras sospechosas.", "impact": "alto", "tag": "Control Social" }
+      ],
+      "later": [
+        { "title": "Grafo de concentración de proveedores habituales", "desc": "Detección de patrones de cartelización comunal.", "impact": "alto", "tag": "Grafos" }
+      ]
+    }
+  },
+  {
+    "id": "auditor-a11y",
+    "code": "P069",
+    "name": "Auditor de Accesibilidad Digital",
+    "category": "govtech",
+    "status": "proto",
+    "statusText": "Incubando",
+    "desc": "Motor de análisis determinista en cliente para certificar el cumplimiento de estándares WCAG AAA en portales del Estado.",
+    "origin": "Los portales de servicios públicos no cumplen con el DS N° 1/2015 del Minsegpres ni con estándares para personas ciegas.",
+    "url": "https://evegat.cl",
+    "likes": 21,
+    "dislikes": 0,
+    "roadmap": {
+      "shipped": [
+        { "title": "Motor determinista de contraste y semántica HTML", "desc": "Reglas de validación estricta basadas en WCAG 2.1 AA.", "impact": "alto", "tag": "Accesibilidad" }
+      ],
+      "now": [
+        { "title": "Generador de informe técnico para jefes de informática", "desc": "Plan de remediación inmediata clasificado por severidad.", "impact": "alto", "tag": "Reportes" }
+      ],
+      "next": [
+        { "title": "Extensión liviana para validación durante publicación", "desc": "Auditoría en tiempo real para encargados de comunicaciones.", "impact": "medio", "tag": "Herramientas" }
+      ],
+      "later": [
+        { "title": "Catastro nacional de accesibilidad municipal 345 comunas", "desc": "Ranking público de cumplimiento normativo.", "impact": "alto", "tag": "Observatorio" }
+      ]
+    }
+  },
+  {
+    "id": "cuida-local",
+    "code": "P003",
+    "name": "CUIDA Local",
+    "category": "govtech",
+    "status": "mov",
+    "statusText": "En movimiento",
+    "desc": "Central Unificada de Información, Diagnóstico y Acción Local para articular oferta comunal de cuidados e inclusión.",
+    "origin": "Falta de articulación entre programas de salud, DIDECO y organizaciones de base que atienden a personas con dependencia severa.",
+    "url": "https://evegat.cl",
+    "likes": 18,
+    "dislikes": 0,
+    "roadmap": {
+      "shipped": [
+        { "title": "Mapa conceptual de servicios comunales de cuidado", "desc": "Taxonomía unificada de subsidios y programas.", "impact": "medio", "tag": "Políticas Públicas" }
+      ],
+      "now": [
+        { "title": "Módulo seguro de georreferenciación de cuidadores", "desc": "Resguardo estricto de privacidad y datos de salud comunal.", "impact": "alto", "tag": "Territorio" }
+      ],
+      "next": [
+        { "title": "Ficha comunal única de necesidades de relevo", "desc": "Herramienta de diagnóstico para asistentes sociales de terreno.", "impact": "alto", "tag": "Social" }
+      ],
+      "later": [
+        { "title": "Tablero de asignación territorial de cuidadoras de relevo", "desc": "Optimización de rutas y tiempos de atención domiciliaria.", "impact": "alto", "tag": "GovTech" }
+      ]
+    }
+  },
+  {
+    "id": "interoperabilidad",
+    "code": "P029",
+    "name": "Mapa de Interoperabilidad del Estado",
+    "category": "govtech",
+    "status": "proto",
+    "statusText": "Prototipo",
+    "desc": "Grafo interactivo de sistemas de información públicos, transferencias de bases de datos y nodos normativos (Ley N° 21.180).",
+    "origin": "Opacidad sobre qué servicios se conectan con la PISEE y cuántos trámites siguen pidiendo certificados redundantes al ciudadano.",
+    "url": "https://evegat.cl",
+    "likes": 31,
+    "dislikes": 1,
+    "roadmap": {
+      "shipped": [
+        { "title": "Grafo público de 40+ servicios e intercambios de datos", "desc": "Visualización de dependencias y cuellos de botella normativos.", "impact": "alto", "tag": "Grafos" }
+      ],
+      "now": [
+        { "title": "Detector de certificados redundantes del Estado", "desc": "Catastro de documentos que el Estado se pide a sí mismo.", "impact": "alto", "tag": "GovTech" }
+      ],
+      "next": [
+        { "title": "Matriz de disponibilidad de APIs públicas", "desc": "Monitoreo de latencia y estado de servicios electrónicos.", "impact": "medio", "tag": "Infraestructura" }
+      ],
+      "later": [
+        { "title": "Simulador de impacto de digitalización de trámites", "desc": "Estimación de ahorro fiscal y horas hombre por municipio.", "impact": "alto", "tag": "Economía Pública" }
+      ]
+    }
+  },
+  {
+    "id": "catastro-clima",
+    "code": "P089",
+    "name": "Compras Públicas y Cambio Climático",
+    "category": "datos",
+    "status": "prod",
+    "statusText": "Realizado",
+    "desc": "Catastro y dataset abierto de adquisiciones estatales orientadas a mitigación y resiliencia climática (Ley N° 21.455).",
+    "origin": "Dificultad de seguimiento fiscal del gasto público comprometido en la Ley Marco de Cambio Climático.",
+    "url": "https://evegat.cl",
+    "likes": 14,
+    "dislikes": 0,
+    "roadmap": {
+      "shipped": [
+        { "title": "Dataset curado de contrataciones climáticas 2023-2025", "desc": "Clasificación por ejes de mitigación, adaptación y riesgo.", "impact": "alto", "tag": "Datos Abiertos" }
+      ],
+      "now": [
+        { "title": "Clasificador automatizado de compras verdes", "desc": "Detección de criterios de sustentabilidad en bases de licitación.", "impact": "medio", "tag": "Sustentabilidad" }
+      ],
+      "next": [
+        { "title": "Alertas para proveedores sustentables y PyMEs", "desc": "Oportunidades de negocio con impacto ecológico en Mercado Público.", "impact": "medio", "tag": "Economía" }
+      ],
+      "later": [
+        { "title": "Observatorio municipal de inversión hídrica de emergencia", "desc": "Seguimiento al gasto de camiones aljibe y pozos comunales.", "impact": "alto", "tag": "Territorio" }
+      ]
+    }
+  },
+  {
+    "id": "visor-municipal",
+    "code": "P059",
+    "name": "Visor Territorial de Gestión Municipal",
+    "category": "datos",
+    "status": "mov",
+    "statusText": "En movimiento",
+    "desc": "Tablero analítico territorial con indicadores de finanzas locales, Fondo Común Municipal (FCM), FIGEM e inversión comunal.",
+    "origin": "Asimetría en la comprensión de las finanzas municipales por parte de concejales y dirigentes vecinales.",
+    "url": "https://evegat.cl",
+    "likes": 25,
+    "dislikes": 1,
+    "roadmap": {
+      "shipped": [
+        { "title": "Tablero de dependencia del FCM para 345 comunas", "desc": "Mapeo interactivo de fragilidad fiscal local.", "impact": "alto", "tag": "Finanzas" }
+      ],
+      "now": [
+        { "title": "Comparador de comunas similares por cluster SUBDERE", "desc": "Benchmarking justo entre municipios de ingresos comparables.", "impact": "alto", "tag": "Análisis" }
+      ],
+      "next": [
+        { "title": "Sistema de alertas de déficit presupuestario temprano", "desc": "Indicadores de morosidad en patentes y derechos de aseo.", "impact": "alto", "tag": "Gestión" }
+      ],
+      "later": [
+        { "title": "Proyector de ingresos propios permanentes", "desc": "Simulación de recaudación ante cambios en avalúos fiscales.", "impact": "medio", "tag": "Econometría" }
+      ]
+    }
+  },
+  {
+    "id": "asistente-cristina",
+    "code": "P061",
+    "name": "Asistente Pedagógica Cristina",
+    "category": "docencia",
+    "status": "prod",
+    "statusText": "En producción",
+    "desc": "Tutor socrático personalizado para estudiantes de políticas públicas con base de conocimiento propia de cátedra.",
+    "origin": "Estudiantes que piden al LLM la respuesta final sin pasar por la deliberación teórica ni el análisis de casos chilenos.",
+    "url": "https://aprenderia.evegat.cl",
+    "likes": 29,
+    "dislikes": 0,
+    "roadmap": {
+      "shipped": [
+        { "title": "Tutor socrático estricto anti-resolución automática", "desc": "Guía con preguntas reflexivas y citas a lecturas obligatorias.", "impact": "alto", "tag": "Docencia" }
+      ],
+      "now": [
+        { "title": "Panel de conceptos difíciles para el equipo docente", "desc": "Métricas agregadas sobre dudas recurrentes de los estudiantes.", "impact": "alto", "tag": "Analítica" }
+      ],
+      "next": [
+        { "title": "Módulo de debate y defensa de políticas públicas", "desc": "Simulación de audiencias parlamentarias o comisiones de concejo.", "impact": "alto", "tag": "Innovación" }
+      ],
+      "later": [
+        { "title": "Adaptador de inferencia offline para laboratorios universitarios", "desc": "Operación con modelos locales pequeños (SLM) sin internet.", "impact": "medio", "tag": "Soberanía TI" }
+      ]
+    }
+  },
+  {
+    "id": "investigadopedia",
+    "code": "EDI001",
+    "name": "Investigadopedia",
+    "category": "civiltech",
+    "status": "proto",
+    "statusText": "Prototipo",
+    "desc": "Curación abierta de herramientas de software e IA para estudiantes de posgrado e investigadores sociales independientes.",
+    "origin": "Falta de guías prácticas y éticas para usar IA sin caer en alucinaciones en tesis de magíster y doctorado.",
+    "url": "https://evegat.cl",
+    "likes": 16,
+    "dislikes": 2,
+    "roadmap": {
+      "shipped": [
+        { "title": "Directorio curado de herramientas reproducibles", "desc": "Fichas técnicas de software libre para investigación social.", "impact": "medio", "tag": "Ciencia Abierta" }
+      ],
+      "now": [
+        { "title": "Guías paso a paso de extracción de datos de Transparencia Activa", "desc": "Pipelines auditables para solicitudes SAIP.", "impact": "alto", "tag": "Investigación" }
+      ],
+      "next": [
+        { "title": "Matriz de verificación de citas y referencias falsas", "desc": "Auditor para detectar alucinaciones bibliográficas de LLMs.", "impact": "alto", "tag": "Ética IA" }
+      ],
+      "later": [
+        { "title": "Banco colaborativo de prompts metodológicos auditados", "desc": "Prompts abiertos para codificación cualitativa reproducible.", "impact": "medio", "tag": "Comunidad" }
+      ]
+    }
+  }
+]

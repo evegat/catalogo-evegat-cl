@@ -1,0 +1,64 @@
+{
+  "schema_version": "1.0.0",
+  "product_id": "P145",
+  "name": "catalogo.evegat.cl",
+  "owner": "Eduardo Vega",
+  "myworld_project": "P145",
+  "kind": "static_site",
+  "lifecycle_stage": "development",
+  "risk": "low",
+  "data_classification": [
+    "public"
+  ],
+  "deployment": {
+    "state": "pending",
+    "production_urls": [
+      "https://catalogo.evegat.cl"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "default_branch": "main",
+    "remote_policy": "new"
+  },
+  "commands": {
+    "quality": [
+      "npm test"
+    ],
+    "build": [
+      "npm run build"
+    ],
+    "test": [
+      "npm test"
+    ]
+  },
+  "critical_paths": [
+    "src",
+    "public",
+    "package.json"
+  ],
+  "forbidden_paths": [
+    ".env",
+    "credentials"
+  ],
+  "multi_agent": {
+    "isolation": "worktree",
+    "integration_owner": "Eduardo Vega"
+  },
+  "observability": {
+    "level": 1,
+    "domains": [
+      "technical",
+      "product"
+    ],
+    "monitors": [
+      {
+        "name": "P145 Catalogo",
+        "type": "http",
+        "target": "https://catalogo.evegat.cl",
+        "interval_seconds": 300,
+        "failure_threshold": 3
+      }
+    ]
+  }
+}
