@@ -1,0 +1,885 @@
+---
+import Layout from '../layouts/Layout.astro';
+import toolsData from '../data/tools.json';
+
+export function getStaticPaths() {
+  return [
+    {
+      params: { category: 'govtech' },
+      props: {
+        categoryName: 'GovTech & Software Público',
+        title: 'GovTech Chile · Herramientas Públicas y Modernización del Estado · Eduardo Vega',
+        description: 'Soluciones operativas de software público, autodiagnóstico Ley 21.719, catastro nacional de ordenanzas e interoperabilidad de sistemas del Estado.',
+        keywords: 'GovTech Chile, modernización del Estado, Ley 21.719, ordenanzas municipales, interoperabilidad PISEE, compras públicas, Eduardo Vega Toledo'
+      }
+    },
+    {
+      params: { category: 'civiltech' },
+      props: {
+        categoryName: 'CivilTech & Tecnología Ciudadana',
+        title: 'CivilTech Chile · Tecnología Ciudadana y Control Social · Eduardo Vega',
+        description: 'Herramientas de control social, alertas de compras públicas, estatuto administrativo de funcionarios, accesibilidad universal y triaje cívico.',
+        keywords: 'CivilTech Chile, control social, Mercado Público, estatuto administrativo, funcionarios públicos, accesibilidad WCAG AAA, triaje cívico'
+      }
+    },
+    {
+      params: { category: 'docencia' },
+      props: {
+        categoryName: 'Docencia e IA Universitaria',
+        title: 'Docencia e IA Pública · Herramientas Pedagógicas FAGOB · Eduardo Vega',
+        description: 'Autodiagnóstico 5D de madurez docente con IA, auditor heurístico de pautas de examen, modelos predictivos escolares y asistentes socráticos.',
+        keywords: 'Docencia con IA, Universidad de Chile, FAGOB, evaluación auténtica, EduVocación, asistente socrático, modelos predictivos Mineduc'
+      }
+    },
+    {
+      params: { category: 'datos' },
+      props: {
+        categoryName: 'Datos Abiertos & Finanzas Públicas',
+        title: 'Datos Abiertos y Finanzas Municipales · Chile · Eduardo Vega',
+        description: 'Catastros territoriales, observatorios de finanzas locales, Fondo Común Municipal (FCM), FIGEM y compras públicas de cambio climático.',
+        keywords: 'Datos abiertos Chile, finanzas municipales, Fondo Común Municipal, FIGEM, compras cambio climático, gestión territorial'
+      }
+    }
+  ];
+}
+
+const { category } = Astro.params;
+const { categoryName, title, description, keywords } = Astro.props;
+
+const filteredTools = toolsData.filter(t => t.category === category);
+const categoryCount = filteredTools.length;
+const totalTools = toolsData.length;
+
+const totalRoadmapItems = filteredTools.reduce((acc, t) => {
+  const s = t.roadmap.shipped?.length || 0;
+  const n = t.roadmap.now?.length || 0;
+  const x = t.roadmap.next?.length || 0;
+  const l = t.roadmap.later?.length || 0;
+  return acc + s + n + x + l;
+}, 0);
+---
+
+<Layout title={title} description={description}>
+  <!-- Schema.org SEO Structured Data (JSON-LD) -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": title,
+    "description": description,
+    "url": `https://catalogo.evegat.cl/${category}`,
+    "creator": {
+      "@type": "Person",
+      "name": "Eduardo Vega Toledo",
+      "url": "https://evegat.cl"
+    },
+    "hasPart": filteredTools.map(t => ({
+      "@type": "SoftwareApplication",
+      "name": t.name,
+      "operatingSystem": "Web",
+      "applicationCategory": "GovernmentApplication",
+      "description": t.desc,
+      "url": t.url
+    }))
+  })} />
+
+  <!-- Breadcrumbs & SEO Hero -->
+  <header class="site-header">
+    <nav class="breadcrumb-nav">
+      <a href="/" class="breadcrumb-link">← Catálogo General</a>
+      <span class="breadcrumb-sep">/</span>
+      <span class="breadcrumb-current">{categoryName}</span>
+    </nav>
+
+    <div class="header-top">
+      <div>
+        <div class="kicker">[SECTOR · {category.toUpperCase()}] · Eduardo Vega Toledo</div>
+        <h1>{categoryName}</h1>
+        <p class="lead">{description}</p>
+      </div>
+    </div>
+
+    <!-- Pestañas de Vista -->
+    <div class="view-switcher">
+      <button class="view-btn active" id="tabBtnCatalog" onclick="switchView('catalog')">
+        📦 Soluciones {categoryName} ({categoryCount})
+      </button>
+      <button class="view-btn" id="tabBtnRoadmap" onclick="switchView('roadmap')">
+        🗺️ Roadmap Específico ({totalRoadmapItems})
+      </button>
+    </div>
+  </header>
+
+  <!-- Barra de Filtros Rápidos hacia otros sectores -->
+  <section class="controls-bar">
+    <div class="filter-group">
+      <a href="/" class="filter-btn">Ver Todos ({totalTools})</a>
+      <a href="/govtech" class={`filter-btn ${category === 'govtech' ? 'active' : ''}`}>GovTech</a>
+      <a href="/civiltech" class={`filter-btn ${category === 'civiltech' ? 'active' : ''}`}>CivilTech</a>
+      <a href="/docencia" class={`filter-btn ${category === 'docencia' ? 'active' : ''}`}>Docencia e IA</a>
+      <a href="/datos" class={`filter-btn ${category === 'datos' ? 'active' : ''}`}>Datos Abiertos</a>
+    </div>
+
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="text" class="search-input" id="searchInput" placeholder={`Buscar dentro de ${categoryName}...`} oninput="handleSearch(this.value)">
+    </div>
+  </section>
+
+  <!-- Banner de Foco en Proyecto Específico (Deep Linking) -->
+  <div id="projectFocusBanner" class="project-focus-banner" style="display: none;">
+    <div>
+      <strong>Filtrando por proyecto:</strong> <span id="projectFocusLabel" class="font-mono">P090</span>
+    </div>
+    <button class="btn-reset-focus" onclick="clearProjectFocus()">Ver todo el sector ✕</button>
+  </div>
+
+  <!-- VISTA 1: CATÁLOGO DEL SECTOR -->
+  <main id="catalogView">
+    <div class="grid" id="toolsGrid"></div>
+  </main>
+
+  <!-- VISTA 2: ROADMAP DEL SECTOR -->
+  <section id="roadmapView" class="roadmap-view" style="display: none;">
+    <div class="roadmap-header">
+      <div class="roadmap-header-text">
+        <h2>Hoja de Ruta del Sector {categoryName}</h2>
+        <p>Hitos de desarrollo clasificados en Ahora (Now), Próximo (Next) y En Estudio (Later).</p>
+      </div>
+      <div>
+        <select id="projectSelector" class="roadmap-project-select" onchange="handleProjectSelect(this.value)">
+          <option value="all">Ver todas las herramientas del sector</option>
+          {filteredTools.map(t => (
+            <option value={t.code}>{t.code} · {t.name}</option>
+          ))}
+        </select>
+      </div>
+    </div>
+
+    <div class="kanban-grid">
+      <div class="kanban-col col-shipped">
+        <div class="col-header">
+          <span class="col-title">✓ Entregado</span>
+          <span class="col-count" id="countShipped">0</span>
+        </div>
+        <div class="kanban-cards" id="colShippedCards"></div>
+      </div>
+
+      <div class="kanban-col col-now">
+        <div class="col-header">
+          <span class="col-title">● En Curso (Now)</span>
+          <span class="col-count" id="countNow">0</span>
+        </div>
+        <div class="kanban-cards" id="colNowCards"></div>
+      </div>
+
+      <div class="kanban-col col-next">
+        <div class="col-header">
+          <span class="col-title">○ Próximo (Next)</span>
+          <span class="col-count" id="countNext">0</span>
+        </div>
+        <div class="kanban-cards" id="colNextCards"></div>
+      </div>
+
+      <div class="kanban-col col-later">
+        <div class="col-header">
+          <span class="col-title">◌ En Estudio (Later)</span>
+          <span class="col-count" id="countLater">0</span>
+        </div>
+        <div class="kanban-cards" id="colLaterCards"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Buzón de Ideas Especializado para el sector -->
+  <section class="buzon-section">
+    <h2>📬 ¿Falta una herramienta pública en este sector?</h2>
+    <p>Cuéntame qué dolor, trámite o base de datos cuesta procesar en tu institución y podemos evaluar su desarrollo o alianza técnica.</p>
+    
+    <form class="buzon-form" onsubmit="handleBuzonSubmit(event)">
+      <input type="hidden" id="buzonSector" value={category} />
+      <div class="form-group">
+        <label for="tipo">Tipo de requerimiento:</label>
+        <select id="tipo" required>
+          <option value="pedido">💡 Pídeme construir una herramienta para {categoryName}</option>
+          <option value="alianza">🤝 Alianza institucional o consultoría B2G</option>
+          <option value="mejora">⚡ Sugerencia de mejora al roadmap de este sector</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="nombre">Nombre y Organización:</label>
+        <input type="text" id="nombre" placeholder="Ej. Camila González, Municipalidad de Santiago" required>
+      </div>
+
+      <div class="form-group">
+        <label for="correo">Correo institucional:</label>
+        <input type="email" id="correo" placeholder="tu-correo@institucion.cl" required>
+      </div>
+
+      <div class="form-group">
+        <label for="descripcion">Problema o propuesta:</label>
+        <textarea id="descripcion" rows="4" placeholder="Describe el cuello de botella que enfrentas..." required></textarea>
+      </div>
+
+      <button type="submit" class="btn-submit">Enviar Requerimiento →</button>
+    </form>
+  </section>
+
+  <!-- Modal para Dudas y Observaciones -->
+  <div class="modal-overlay" id="feedbackModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="modalTitle">Aportar sobre Herramienta</h3>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+      </div>
+      <form onsubmit="handleFeedbackSubmit(event)">
+        <input type="hidden" id="modalToolId">
+        <input type="hidden" id="modalFeedbackType">
+        <div class="form-group" style="margin-bottom: 0.85rem;">
+          <label id="modalInputLabel">Tu consulta u observación técnica:</label>
+          <textarea id="modalText" rows="4" required style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 6px;"></textarea>
+        </div>
+        <div class="form-group" style="margin-bottom: 1rem;">
+          <label>Tu correo institucional:</label>
+          <input type="email" id="modalEmail" required style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 6px;">
+        </div>
+        <button type="submit" class="btn-submit" style="width: 100%;">Enviar Mensaje</button>
+      </form>
+    </div>
+  </div>
+
+  <style>
+    .breadcrumb-nav {
+      font-size: 0.82rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .breadcrumb-link {
+      color: var(--navy-light);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .breadcrumb-link:hover { text-decoration: underline; }
+    .breadcrumb-sep { color: var(--muted); }
+    .breadcrumb-current { color: var(--muted); font-weight: 500; }
+
+    .site-header {
+      max-width: 1200px;
+      margin: 2rem auto 1.5rem auto;
+      border-bottom: 2px solid var(--navy);
+      padding-bottom: 1.5rem;
+    }
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .kicker {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--navy-light);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.35rem;
+    }
+    h1 {
+      font-size: 2.1rem;
+      color: var(--navy);
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+    }
+    .lead {
+      color: var(--muted);
+      font-size: 1.05rem;
+      margin-top: 0.6rem;
+      max-width: 860px;
+    }
+
+    .view-switcher {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1.25rem;
+      background: #e2e8f0;
+      padding: 4px;
+      border-radius: 8px;
+      width: fit-content;
+    }
+    .view-btn {
+      background: transparent;
+      border: none;
+      padding: 0.5rem 1.15rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      border-radius: 6px;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .view-btn.active {
+      background: var(--paper);
+      color: var(--navy);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    .controls-bar {
+      max-width: 1200px;
+      margin: 0 auto 1.5rem auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 0;
+    }
+    .filter-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      align-items: center;
+    }
+    .filter-btn {
+      background: var(--paper);
+      border: 1px solid var(--border);
+      padding: 0.4rem 0.85rem;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .filter-btn:hover {
+      border-color: var(--navy-light);
+      color: var(--navy);
+    }
+    .filter-btn.active {
+      background: var(--navy);
+      color: #fff;
+      border-color: var(--navy);
+    }
+
+    .search-box {
+      position: relative;
+      min-width: 260px;
+    }
+    .search-input {
+      width: 100%;
+      padding: 0.45rem 0.85rem 0.45rem 2rem;
+      border: 1px solid var(--border-strong);
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-family: var(--font-sans);
+      background: var(--paper);
+    }
+    .search-icon {
+      position: absolute;
+      left: 0.65rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .project-focus-banner {
+      max-width: 1200px;
+      margin: 0 auto 1.25rem auto;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-left: 4px solid var(--navy-light);
+      padding: 0.75rem 1rem;
+      border-radius: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.88rem;
+    }
+    .btn-reset-focus {
+      background: #ffffff;
+      border: 1px solid #bfdbfe;
+      color: var(--navy-light);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .roadmap-view {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .roadmap-header {
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .roadmap-header-text h2 {
+      font-size: 1.35rem;
+      color: var(--navy);
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+    .roadmap-header-text p {
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+    .roadmap-project-select {
+      padding: 0.45rem 0.75rem;
+      border: 1px solid var(--border-strong);
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-family: var(--font-sans);
+      background: #ffffff;
+      color: var(--navy);
+      font-weight: 600;
+    }
+
+    .kanban-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+      align-items: start;
+    }
+    @media (max-width: 1024px) {
+      .kanban-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .kanban-grid { grid-template-columns: 1fr; }
+    }
+
+    .kanban-col {
+      background: #f1f5f9;
+      border-radius: var(--radius);
+      padding: 0.9rem;
+      border: 1px solid var(--border);
+    }
+    .col-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.85rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--border-strong);
+    }
+    .col-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--navy);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .col-count {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      padding: 0.15rem 0.45rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .col-shipped { border-top: 3px solid #10b981; }
+    .col-now { border-top: 3px solid var(--navy); }
+    .col-next { border-top: 3px solid #0284c7; }
+    .col-later { border-top: 3px solid #94a3b8; }
+
+    .kanban-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .buzon-section {
+      max-width: 1200px;
+      margin: 4rem auto 0 auto;
+      background: #ffffff;
+      border: 2px dashed var(--border-strong);
+      border-radius: var(--radius);
+      padding: 2.5rem 1.5rem;
+      text-align: center;
+    }
+    .buzon-section h2 {
+      color: var(--navy);
+      font-size: 1.65rem;
+      font-weight: 800;
+      margin-bottom: 0.4rem;
+    }
+    .buzon-section p {
+      color: var(--muted);
+      max-width: 650px;
+      margin: 0 auto 1.5rem auto;
+      font-size: 0.95rem;
+    }
+    .buzon-form {
+      max-width: 620px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      text-align: left;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 0.25rem;
+    }
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%;
+      padding: 0.55rem 0.75rem;
+      border: 1px solid var(--border-strong);
+      border-radius: 6px;
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+    }
+    .btn-submit {
+      background: var(--navy);
+      color: #fff;
+      border: none;
+      padding: 0.65rem 1.25rem;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.92rem;
+      align-self: flex-start;
+      transition: background 0.15s ease;
+    }
+    .btn-submit:hover { background: var(--navy-light); }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(2px);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-box {
+      background: #fff;
+      max-width: 500px;
+      width: 100%;
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.15);
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .modal-header h3 { font-size: 1.15rem; color: var(--navy); font-weight: 700; }
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--muted);
+    }
+  </style>
+
+  <script is:inline define:vars={{ filteredTools, category }}>
+    let currentView = 'catalog';
+    let focusedProject = null;
+    let searchQuery = '';
+
+    function initFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      const viewParam = params.get('view') || params.get('tab');
+      if (viewParam === 'roadmap') currentView = 'roadmap';
+      
+      const pParam = params.get('p') || params.get('tool');
+      if (pParam) {
+        const match = filteredTools.find(t => t.code.toLowerCase() === pParam.toLowerCase() || t.id.toLowerCase() === pParam.toLowerCase());
+        if (match) focusedProject = match.code;
+      }
+      syncView();
+    }
+
+    function syncUrl() {
+      const params = new URLSearchParams();
+      if (currentView !== 'catalog') params.set('view', currentView);
+      if (focusedProject) params.set('p', focusedProject);
+      const newUrl = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
+      history.replaceState(null, '', newUrl);
+    }
+
+    window.switchView = function(view) {
+      currentView = view;
+      syncView();
+      syncUrl();
+    };
+
+    function syncView() {
+      document.getElementById('tabBtnCatalog').classList.toggle('active', currentView === 'catalog');
+      document.getElementById('tabBtnRoadmap').classList.toggle('active', currentView === 'roadmap');
+
+      document.getElementById('catalogView').style.display = currentView === 'catalog' ? 'block' : 'none';
+      document.getElementById('roadmapView').style.display = currentView === 'roadmap' ? 'block' : 'none';
+
+      updateFocusBanner();
+      if (currentView === 'catalog') renderCatalog();
+      else renderRoadmap();
+    }
+
+    window.setProjectFocus = function(projectCode) {
+      focusedProject = projectCode;
+      document.getElementById('projectSelector').value = projectCode || 'all';
+      updateFocusBanner();
+      if (currentView === 'catalog') renderCatalog();
+      else renderRoadmap();
+      syncUrl();
+    };
+
+    window.clearProjectFocus = function() {
+      focusedProject = null;
+      document.getElementById('projectSelector').value = 'all';
+      updateFocusBanner();
+      if (currentView === 'catalog') renderCatalog();
+      else renderRoadmap();
+      syncUrl();
+    };
+
+    function updateFocusBanner() {
+      const banner = document.getElementById('projectFocusBanner');
+      if (focusedProject) {
+        const tool = filteredTools.find(t => t.code === focusedProject);
+        document.getElementById('projectFocusLabel').innerText = `${tool ? tool.code + ' — ' + tool.name : focusedProject}`;
+        banner.style.display = 'flex';
+      } else {
+        banner.style.display = 'none';
+      }
+    }
+
+    window.handleSearch = function(q) {
+      searchQuery = q.trim().toLowerCase();
+      if (currentView === 'catalog') renderCatalog();
+      else renderRoadmap();
+    };
+
+    window.handleProjectSelect = function(val) {
+      if (val === 'all') window.clearProjectFocus();
+      else window.setProjectFocus(val);
+    };
+
+    function getTools() {
+      return filteredTools.filter(t => {
+        if (focusedProject && t.code !== focusedProject) return false;
+        if (searchQuery) {
+          return (t.name + ' ' + t.desc + ' ' + t.origin + ' ' + t.code).toLowerCase().includes(searchQuery);
+        }
+        return true;
+      });
+    }
+
+    function renderCatalog() {
+      const grid = document.getElementById('toolsGrid');
+      grid.innerHTML = '';
+      const tools = getTools();
+
+      if (tools.length === 0) {
+        grid.innerHTML = `
+          <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; background: #fff; border-radius: 8px; border: 1px dashed var(--border);">
+            <p style="color: var(--muted); font-size: 1rem;">No se encontraron herramientas con los filtros actuales.</p>
+            <button class="btn-reset-focus" style="margin-top: 0.75rem;" onclick="clearProjectFocus()">Restablecer filtros</button>
+          </div>
+        `;
+        return;
+      }
+
+      tools.forEach(tool => {
+        const card = document.createElement('article');
+        card.style.cssText = "background: var(--paper); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between;";
+        const totalRoadmapItems = (tool.roadmap.shipped?.length || 0) + (tool.roadmap.now?.length || 0) + (tool.roadmap.next?.length || 0) + (tool.roadmap.later?.length || 0);
+
+        const badgeStyle = tool.status === 'prod' ? 'background: #dcfce7; color: var(--success);' : (tool.status === 'mov' ? 'background: #e0f2fe; color: var(--navy-light);' : 'background: #fef3c7; color: var(--warning);');
+
+        card.innerHTML = `
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+              <span style="font-family: var(--font-mono); font-size: 0.75rem; font-weight: 600; color: var(--navy-light);">[${tool.code} · ${tool.category.toUpperCase()}]</span>
+              <span style="font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.5rem; border-radius: 4px; text-transform: uppercase; ${badgeStyle}">${tool.statusText}</span>
+            </div>
+            <h2 style="font-size: 1.15rem; color: var(--navy); font-weight: 700; margin-bottom: 0.4rem; line-height: 1.3;">${tool.name}</h2>
+            <p style="font-size: 0.88rem; color: var(--text); margin-bottom: 0.75rem; line-height: 1.45;">${tool.desc}</p>
+            <div style="background: #f1f5f9; border-left: 3px solid var(--navy-light); padding: 0.5rem 0.65rem; font-size: 0.78rem; color: var(--muted); border-radius: 0 4px 4px 0; margin-bottom: 0.85rem; line-height: 1.4;">
+              <strong style="color: var(--navy); font-weight: 600;">Detonante institucional:</strong> ${tool.origin}
+            </div>
+          </div>
+          
+          <div style="border-top: 1px solid var(--border); padding-top: 0.85rem; margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.6rem;">
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+              <a href="${tool.url}" target="_blank" style="background: var(--navy); color: #fff; border-radius: 6px; padding: 0.4rem 0.8rem; text-decoration: none; font-size: 0.82rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.3rem;">Abrir solución ↗</a>
+              <button style="background: #f1f5f9; border: 1px solid var(--border-strong); color: var(--navy); border-radius: 6px; padding: 0.4rem 0.75rem; font-size: 0.82rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.3rem;" onclick="goToToolRoadmap('${tool.code}')">
+                🗺️ Roadmap (${totalRoadmapItems})
+              </button>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem;">
+              <div style="display: flex; gap: 0.35rem;">
+                <button id="like-${tool.id}" onclick="handleVote('${tool.id}', 'like')" style="background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 0.25rem 0.5rem; font-size: 0.78rem; cursor: pointer; display: inline-flex; align-items: center; gap: 0.3rem; color: var(--muted); font-weight: 600;">
+                  ❤️ <span id="count-like-${tool.id}">${tool.likes}</span>
+                </button>
+                <button id="dislike-${tool.id}" onclick="handleVote('${tool.id}', 'dislike')" style="background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 0.25rem 0.5rem; font-size: 0.78rem; cursor: pointer; display: inline-flex; align-items: center; gap: 0.3rem; color: var(--muted); font-weight: 600;">
+                  👎 <span id="count-dislike-${tool.id}">${tool.dislikes}</span>
+                </button>
+              </div>
+              <div style="display: flex; gap: 0.5rem;">
+                <button onclick="openFeedback('${tool.id}', '${tool.name}', 'duda')" style="background: none; border: none; color: var(--navy-light); font-size: 0.78rem; font-weight: 500; cursor: pointer;">❓ Tengo dudas</button>
+                <button onclick="openFeedback('${tool.id}', '${tool.name}', 'obs')" style="background: none; border: none; color: var(--navy-light); font-size: 0.78rem; font-weight: 500; cursor: pointer;">💬 Observación</button>
+              </div>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    window.goToToolRoadmap = function(projectCode) {
+      window.setProjectFocus(projectCode);
+      window.switchView('roadmap');
+      window.scrollTo({ top: 200, behavior: 'smooth' });
+    };
+
+    function renderRoadmap() {
+      const tools = getTools();
+
+      const shippedContainer = document.getElementById('colShippedCards');
+      const nowContainer = document.getElementById('colNowCards');
+      const nextContainer = document.getElementById('colNextCards');
+      const laterContainer = document.getElementById('colLaterCards');
+
+      shippedContainer.innerHTML = '';
+      nowContainer.innerHTML = '';
+      nextContainer.innerHTML = '';
+      laterContainer.innerHTML = '';
+
+      let cShipped = 0, cNow = 0, cNext = 0, cLater = 0;
+
+      tools.forEach(tool => {
+        (tool.roadmap.shipped || []).forEach(item => {
+          cShipped++;
+          shippedContainer.appendChild(createRoadmapCardElement(tool, item));
+        });
+        (tool.roadmap.now || []).forEach(item => {
+          cNow++;
+          nowContainer.appendChild(createRoadmapCardElement(tool, item));
+        });
+        (tool.roadmap.next || []).forEach(item => {
+          cNext++;
+          nextContainer.appendChild(createRoadmapCardElement(tool, item));
+        });
+        (tool.roadmap.later || []).forEach(item => {
+          cLater++;
+          laterContainer.appendChild(createRoadmapCardElement(tool, item));
+        });
+      });
+
+      document.getElementById('countShipped').innerText = cShipped;
+      document.getElementById('countNow').innerText = cNow;
+      document.getElementById('countNext').innerText = cNext;
+      document.getElementById('countLater').innerText = cLater;
+    }
+
+    function createRoadmapCardElement(tool, item) {
+      const card = document.createElement('div');
+      card.style.cssText = "background: var(--paper); border: 1px solid var(--border); border-radius: 6px; padding: 0.85rem; box-shadow: 0 1px 2px rgba(0,0,0,0.03);";
+      const impactStyle = item.impact === 'alto' ? 'background: #fee2e2; color: #991b1b;' : (item.impact === 'medio' ? 'background: #e0f2fe; color: #075985;' : 'background: #f3f4f6; color: #4b5563;');
+
+      card.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.35rem;">
+          <span style="font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700; color: var(--navy-light);">[${tool.code} · ${tool.name}]</span>
+          ${item.impact ? `<span style="font-size: 0.65rem; font-weight: 700; padding: 0.15rem 0.35rem; border-radius: 3px; text-transform: uppercase; ${impactStyle}">${item.impact}</span>` : ''}
+        </div>
+        <h4 style="font-size: 0.9rem; font-weight: 700; color: var(--navy); line-height: 1.3; margin-bottom: 0.35rem;">${item.title}</h4>
+        ${item.desc ? `<p style="font-size: 0.8rem; color: var(--muted); line-height: 1.4; margin-bottom: 0.5rem;">${item.desc}</p>` : ''}
+        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.72rem; padding-top: 0.4rem; border-top: 1px dashed var(--border); color: var(--muted);">
+          <span>${item.tag ? '🏷️ ' + item.tag : tool.category}</span>
+          <button onclick="setProjectFocus('${tool.code}')" style="background: none; border: none; color: var(--navy-light); cursor: pointer; font-weight: 600; font-family: var(--font-mono);" title="Filtrar solo este producto">
+            Aislar ${tool.code} →
+          </button>
+        </div>
+      `;
+      return card;
+    }
+
+    window.handleVote = function(id, type) {
+      const tool = filteredTools.find(t => t.id === id);
+      if (!tool) return;
+      if (type === 'like') {
+        tool.likes++;
+        document.getElementById(`count-like-${id}`).innerText = tool.likes;
+      } else {
+        tool.dislikes++;
+        document.getElementById(`count-dislike-${id}`).innerText = tool.dislikes;
+      }
+      if (window.umami) {
+        window.umami.track('catalogo_voto', { herramienta: id, codigo: tool.code, tipo: type });
+      }
+    };
+
+    window.openFeedback = function(id, name, type) {
+      document.getElementById('modalToolId').value = id;
+      document.getElementById('modalFeedbackType').value = type;
+      document.getElementById('modalTitle').innerText = (type === 'duda' ? '❓ Pregunta técnica sobre ' : '💬 Observación sobre ') + name;
+      document.getElementById('modalInputLabel').innerText = (type === 'duda' ? '¿Cuál es tu duda metodológica, normativa o técnica?' : '¿Qué caso de borde o mejora propones?');
+      document.getElementById('feedbackModal').classList.add('active');
+    };
+
+    window.closeModal = function() {
+      document.getElementById('feedbackModal').classList.remove('active');
+    };
+
+    window.handleFeedbackSubmit = function(e) {
+      e.preventDefault();
+      const toolId = document.getElementById('modalToolId').value;
+      const email = document.getElementById('modalEmail').value;
+      alert(`¡Gracias! Mensaje sobre "${toolId}" registrado para respuesta directa a ${email}.`);
+      window.closeModal();
+    };
+
+    window.handleBuzonSubmit = function(e) {
+      e.preventDefault();
+      const correo = document.getElementById('correo').value;
+      alert(`¡Requerimiento recibido en el Buzón de Ideas! Nos pondremos en contacto con ${correo}.`);
+      e.target.reset();
+    };
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initFromUrl();
+    });
+  </script>
+</Layout>
