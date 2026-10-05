@@ -18,153 +18,345 @@ const countDatos = toolsData.filter(t => t.category === 'datos').length;
 ---
 
 <Layout 
-  title="Catálogo y Roadmap de Herramientas Públicas · Eduardo Vega"
-  description="Soluciones operativas, catastros territoriales y prototipos cívicos para destrabar la gestión del Estado, la docencia y el cumplimiento normativo."
+  title="Catálogo & Roadmap de Herramientas Públicas · Eduardo Vega Toledo"
+  description="Inventario operativo de software de Estado, catastros territoriales y tecnología cívica para destrabar la gestión municipal, el cumplimiento normativo y el control social."
+  keywords="GovTech Chile, CivilTech, Ley 21.719, catastro ordenanzas, compras públicas, Eduardo Vega Toledo, Universidad de Chile, tecnología pública"
 >
-  <!-- Header -->
-  <header class="site-header">
-    <div class="header-top">
-      <div>
-        <div class="kicker">Ecosistema Digital · Eduardo Vega Toledo</div>
-        <h1>Catálogo de Herramientas y Roadmap Público</h1>
-        <p class="lead">Soluciones operativas, catastros territoriales y prototipos cívicos para destrabar la gestión del Estado, la docencia y el cumplimiento normativo. Explora el inventario, revisa la hoja de ruta en curso o propón un nuevo desarrollo.</p>
-      </div>
-    </div>
-
-    <!-- Pestañas de Vista -->
-    <div class="view-switcher">
-      <button class="view-btn active" id="tabBtnCatalog" onclick="switchView('catalog')">
-        📦 Catálogo de Herramientas (<span id="totalToolsCount">{totalTools}</span>)
-      </button>
-      <button class="view-btn" id="tabBtnRoadmap" onclick="switchView('roadmap')">
-        🗺️ Roadmap del Ecosistema (<span id="totalRoadmapCount">{totalRoadmapItems}</span>)
-      </button>
+  <!-- Barra de Navegación Institucional evegat.cl -->
+  <header class="top-nav-shell">
+    <div class="top-nav-inner">
+      <a href="https://evegat.cl" class="brand-block">
+        <span class="brand-mark">EVT</span>
+        <div class="brand-text">
+          <strong>Eduardo Vega Toledo</strong>
+          <small>Gestión pública · evidencia · tecnología</small>
+        </div>
+      </a>
+      <nav class="nav-links" aria-label="Navegación del sitio">
+        <a href="https://evegat.cl/servicios/">Servicios</a>
+        <a href="https://evegat.cl/casos/">Casos</a>
+        <a href="https://evegat.cl/publicaciones/">Publicaciones</a>
+        <a href="https://evegat.cl/contacto/">Contacto</a>
+        <a href="https://evegat.cl" class="btn-back-portafolio">← Portafolio evegat.cl</a>
+      </nav>
     </div>
   </header>
 
-  <!-- Barra de Filtros y Búsqueda -->
-  <section class="controls-bar">
-    <div class="filter-group">
-      <button class="filter-btn active" onclick="setCategoryFilter('all')">Todas (<span>{totalTools}</span>)</button>
-      <button class="filter-btn" onclick="setCategoryFilter('govtech')">GovTech (<span>{countGovTech}</span>)</button>
-      <button class="filter-btn" onclick="setCategoryFilter('civiltech')">CivilTech (<span>{countCivilTech}</span>)</button>
-      <button class="filter-btn" onclick="setCategoryFilter('docencia')">Docencia e IA (<span>{countDocencia}</span>)</button>
-      <button class="filter-btn" onclick="setCategoryFilter('datos')">Datos Abiertos (<span>{countDatos}</span>)</button>
-    </div>
+  <!-- Hero Editorial y Cintillo de Pulso del Ecosistema -->
+  <section class="hero-shell">
+    <div class="hero-inner">
+      <p class="archive-kicker">03 · ECOSISTEMA DIGITAL PÚBLICO & HOJA DE RUTA</p>
+      <h1>Herramientas públicas, catastros territoriales y tecnología cívica.</h1>
+      <p class="hero-lead">
+        Inventario operativo de soluciones de software de Estado y hojas de ruta de desarrollo en abierto. Diseñado para resolver brechas normativas (Ley N° 21.719), analítica de gestión municipal, docencia con IA y control social con evidencia auditable.
+      </p>
 
-    <div class="search-box">
-      <span class="search-icon">🔍</span>
-      <input type="text" class="search-input" id="searchInput" placeholder="Buscar por norma, comuna, código..." oninput="handleSearch(this.value)">
+      <!-- Trust Bar / Pulso del Ecosistema -->
+      <div class="trust-bar" aria-label="Métricas de capacidad del ecosistema">
+        <div class="trust-item">
+          <span class="live-dot" aria-hidden="true"></span>
+          <strong>{totalTools}</strong> herramientas activas
+        </div>
+        <span class="trust-sep">·</span>
+        <div class="trust-item">
+          <strong>{totalRoadmapItems}</strong> hitos documentados
+        </div>
+        <span class="trust-sep">·</span>
+        <div class="trust-item">
+          <strong>100%</strong> código auditable
+        </div>
+        <span class="trust-sep">·</span>
+        <div class="trust-item">
+          <strong>Hostinger VPS</strong> / Coolify producción
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- Banner de Foco en Proyecto Específico (Deep Linking) -->
-  <div id="projectFocusBanner" class="project-focus-banner" style="display: none;">
-    <div>
-      <strong>Filtrando por proyecto específico:</strong> <span id="projectFocusLabel" class="font-mono">P090</span>
+  <!-- Contenedor Principal de la Aplicación -->
+  <div class="app-shell">
+    <!-- Pestañas de Vista: Catálogo vs Roadmap -->
+    <div class="view-switcher-bar">
+      <div class="view-tabs" role="tablist">
+        <button class="view-tab active" id="tabBtnCatalog" role="tab" aria-selected="true" onclick="switchView('catalog')">
+          <span class="tab-icon">📦</span>
+          <span>Catálogo de Herramientas</span>
+          <span class="tab-badge" id="totalToolsCount">{totalTools}</span>
+        </button>
+        <button class="view-tab" id="tabBtnRoadmap" role="tab" aria-selected="false" onclick="switchView('roadmap')">
+          <span class="tab-icon">🗺️</span>
+          <span>Roadmap del Ecosistema</span>
+          <span class="tab-badge" id="totalRoadmapCount">{totalRoadmapItems}</span>
+        </button>
+      </div>
+
+      <!-- Buscador Reactivo Instantáneo -->
+      <div class="search-wrap">
+        <span class="search-glyph">🔍</span>
+        <input 
+          type="text" 
+          class="search-input" 
+          id="searchInput" 
+          placeholder="Buscar por norma, comuna, código (ej: P087, Ley 21.719)..." 
+          oninput="handleSearch(this.value)"
+        />
+        <button class="search-clear" id="searchClearBtn" onclick="clearSearch()" style="display: none;" title="Limpiar búsqueda">&times;</button>
+      </div>
     </div>
-    <button class="btn-reset-focus" onclick="clearProjectFocus()">Ver todo el catálogo / roadmap ✕</button>
+
+    <!-- Barra de Filtros por Categoría -->
+    <div class="filter-pills-bar">
+      <div class="pills-scroll">
+        <button class="pill-btn active" data-cat="all" onclick="setCategoryFilter('all')">
+          Todas <span class="pill-count">{totalTools}</span>
+        </button>
+        <button class="pill-btn" data-cat="govtech" onclick="setCategoryFilter('govtech')">
+          GovTech & Estado <span class="pill-count">{countGovTech}</span>
+        </button>
+        <button class="pill-btn" data-cat="civiltech" onclick="setCategoryFilter('civiltech')">
+          CivilTech & Ciudadanía <span class="pill-count">{countCivilTech}</span>
+        </button>
+        <button class="pill-btn" data-cat="docencia" onclick="setCategoryFilter('docencia')">
+          Docencia e IA <span class="pill-count">{countDocencia}</span>
+        </button>
+        <button class="pill-btn" data-cat="datos" onclick="setCategoryFilter('datos')">
+          Datos Abiertos & Finanzas <span class="pill-count">{countDatos}</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Banner de Foco en Proyecto Específico (Deep Linking) -->
+    <div id="projectFocusBanner" class="project-focus-banner" style="display: none;">
+      <div class="focus-banner-text">
+        <span class="focus-badge">FILTRANDO PROYECTO</span>
+        <strong id="projectFocusLabel" class="font-mono">P090</strong>
+      </div>
+      <button class="btn-reset-focus" onclick="clearProjectFocus()">Ver todo el catálogo / roadmap ✕</button>
+    </div>
+
+    <!-- VISTA 1: CATÁLOGO DE HERRAMIENTAS -->
+    <main id="catalogView" class="catalog-view">
+      <div class="tools-grid" id="toolsGrid">
+        <!-- Renderizado dinámico vía JS -->
+      </div>
+      <div id="noResultsCatalog" class="empty-state" style="display: none;">
+        <p class="empty-title">No se encontraron herramientas con ese criterio</p>
+        <p class="empty-desc">Prueba buscando por palabra clave o restablece los filtros.</p>
+        <button class="btn-editorial" onclick="resetAllFilters()">Restablecer filtros</button>
+      </div>
+    </main>
+
+    <!-- VISTA 2: ROADMAP UNIFICADO -->
+    <section id="roadmapView" class="roadmap-view" style="display: none;">
+      <div class="roadmap-toolbar">
+        <div class="roadmap-toolbar-info">
+          <h2>Hoja de Ruta de Desarrollo</h2>
+          <p>Compromisos e hitos de entrega clasificados por estado de madurez, sin fechas rígidas que caducan.</p>
+        </div>
+        <div class="roadmap-controls">
+          <!-- Switcher Kanban vs Timeline -->
+          <div class="roadmap-mode-switch">
+            <button class="mode-btn active" id="btnModeKanban" onclick="switchRoadmapMode('kanban')" title="Vista Columnas">
+              Tablero Columnas
+            </button>
+            <button class="mode-btn" id="btnModeTimeline" onclick="switchRoadmapMode('timeline')" title="Vista Línea de Tiempo">
+              Línea de Tiempo
+            </button>
+          </div>
+
+          <!-- Selector de Proyecto -->
+          <select id="projectSelector" class="project-select" onchange="handleProjectSelect(this.value)">
+            <option value="all">Visión Macro (Todos los proyectos)</option>
+            {toolsData.map(t => (
+              <option value={t.code}>{t.code} · {t.name}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      <!-- MODO KANBAN (4 COLUMNAS) -->
+      <div id="kanbanContainer" class="kanban-grid">
+        <!-- Columna Entregado -->
+        <div class="kanban-col col-shipped">
+          <div class="col-header">
+            <div class="col-title-group">
+              <span class="status-indicator shipped"></span>
+              <span class="col-title">Entregado</span>
+            </div>
+            <span class="col-count" id="countShipped">0</span>
+          </div>
+          <p class="col-sub">Changelog en producción y verificable</p>
+          <div class="col-cards" id="colShippedCards"></div>
+        </div>
+
+        <!-- Columna En Curso -->
+        <div class="kanban-col col-now">
+          <div class="col-header">
+            <div class="col-title-group">
+              <span class="status-indicator now"></span>
+              <span class="col-title">En Curso (Now)</span>
+            </div>
+            <span class="col-count" id="countNow">0</span>
+          </div>
+          <p class="col-sub">Sprint activo y construcción en marcha</p>
+          <div class="col-cards" id="colNowCards"></div>
+        </div>
+
+        <!-- Columna Próximo -->
+        <div class="kanban-col col-next">
+          <div class="col-header">
+            <div class="col-title-group">
+              <span class="status-indicator next"></span>
+              <span class="col-title">Próximo (Next)</span>
+            </div>
+            <span class="col-count" id="countNext">0</span>
+          </div>
+          <p class="col-sub">Diseño técnico y prioridad inmediata</p>
+          <div class="col-cards" id="colNextCards"></div>
+        </div>
+
+        <!-- Columna En Estudio -->
+        <div class="kanban-col col-later">
+          <div class="col-header">
+            <div class="col-title-group">
+              <span class="status-indicator later"></span>
+              <span class="col-title">En Estudio (Later)</span>
+            </div>
+            <span class="col-count" id="countLater">0</span>
+          </div>
+          <p class="col-sub">Exploración y validación institucional</p>
+          <div class="col-cards" id="colLaterCards"></div>
+        </div>
+      </div>
+
+      <!-- MODO TIMELINE (LÍNEA DE TIEMPO CRONOLÓGICA) -->
+      <div id="timelineContainer" class="timeline-view" style="display: none;">
+        <div class="timeline-group" id="timelineGroupShipped">
+          <div class="timeline-group-badge shipped">FASE 1 · HITOS COMPLETADOS (PRODUCCIÓN)</div>
+          <div class="timeline-items" id="timelineShippedItems"></div>
+        </div>
+        <div class="timeline-group" id="timelineGroupNow">
+          <div class="timeline-group-badge now">FASE 2 · EN DESARROLLO ACTIVO (SPRINT Q3/Q4 2026)</div>
+          <div class="timeline-items" id="timelineNowItems"></div>
+        </div>
+        <div class="timeline-group" id="timelineGroupNext">
+          <div class="timeline-group-badge next">FASE 3 · PRÓXIMOS DESPLIEGUES (Q4 2026 / Q1 2027)</div>
+          <div class="timeline-items" id="timelineNextItems"></div>
+        </div>
+        <div class="timeline-group" id="timelineGroupLater">
+          <div class="timeline-group-badge later">FASE 4 · INICIATIVAS EN ESTUDIO DE FACTIBILIDAD</div>
+          <div class="timeline-items" id="timelineLaterItems"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BUZÓN DE PROPUESTAS Y NUEVOS REQUERIMIENTOS -->
+    <section class="proposal-section">
+      <div class="proposal-card">
+        <div class="proposal-header">
+          <p class="archive-kicker">PROPUESTA DE HERRAMIENTA</p>
+          <h2>¿Falta una herramienta para tu comuna o institución?</h2>
+          <p class="proposal-lead">
+            Si tu dirección municipal o servicio público enfrenta un trámite engorroso, un cuello de botella normativo o datos dispersos en PDFs, envíanos el desafío. Si tiene valor público transversal, lo evaluamos para andamiarlo en el catálogo.
+          </p>
+        </div>
+        <form class="proposal-form" onsubmit="handleProposalSubmit(event)">
+          <div class="form-row">
+            <div class="form-field">
+              <label for="propNombre">Nombre y Cargo / Institución</label>
+              <input type="text" id="propNombre" placeholder="Ej. Camila González, SECPLA Maipú / Fac. Gobierno UChile" required>
+            </div>
+            <div class="form-field">
+              <label for="propCorreo">Correo institucional de contacto</label>
+              <input type="email" id="propCorreo" placeholder="tu-correo@institucion.cl" required>
+            </div>
+          </div>
+          <div class="form-field">
+            <label for="propDescripcion">¿Cuál es el cuello de botella o propuesta concreta?</label>
+            <textarea id="propDescripcion" rows="3" placeholder="Explica qué trámite, norma o base de datos cuesta procesar y qué resultado esperas ver en pantalla..." required></textarea>
+          </div>
+          <div class="proposal-actions">
+            <button type="submit" class="btn-submit-proposal">Enviar Propuesta al Buzón →</button>
+            <small class="proposal-privacy-note">Uso exclusivo para evaluación técnica. Respuesta directa en menos de 48 horas hábiles.</small>
+          </div>
+        </form>
+      </div>
+    </section>
   </div>
 
-  <!-- VISTA 1: CATÁLOGO DE HERRAMIENTAS -->
-  <main id="catalogView">
-    <div class="grid" id="toolsGrid">
-      <!-- Generado dinámicamente -->
-    </div>
-  </main>
-
-  <!-- VISTA 2: ROADMAP UNIFICADO -->
-  <section id="roadmapView" class="roadmap-view" style="display: none;">
-    <div class="roadmap-header">
-      <div class="roadmap-header-text">
-        <h2>Hoja de Ruta de Desarrollo (Now / Next / Later)</h2>
-        <p>Hitos reales orientados a impacto y valor institucional, sin fechas rígidas que caducan ni jerga corporativa.</p>
-      </div>
-      <div>
-        <label for="projectSelector" style="font-size: 0.8rem; font-weight: 700; color: var(--navy); display: block; margin-bottom: 0.25rem;">Filtrar por producto:</label>
-        <select id="projectSelector" class="roadmap-project-select" onchange="handleProjectSelect(this.value)">
-          <option value="all">Visión Macro (Todos los proyectos)</option>
-          {toolsData.map(t => (
-            <option value={t.code}>{t.code} · {t.name}</option>
-          ))}
-        </select>
-      </div>
-    </div>
-
-    <div class="kanban-grid">
-      <!-- Columna Entregado (Changelog) -->
-      <div class="kanban-col col-shipped">
-        <div class="col-header">
-          <span class="col-title">✓ Entregado</span>
-          <span class="col-count" id="countShipped">0</span>
+  <!-- SLIDE-OVER DRAWER (PANEL LATERAL DE INSPECCIÓN DE PRODUCTO) -->
+  <div class="drawer-backdrop" id="drawerBackdrop" onclick="closeDrawer()"></div>
+  <aside class="slide-drawer" id="slideDrawer" aria-hidden="true">
+    <div class="drawer-header">
+      <div class="drawer-header-top">
+        <div class="drawer-meta-badges">
+          <span class="drawer-code font-mono" id="drawerCode">P087</span>
+          <span class="drawer-category-badge" id="drawerCategory">GovTech</span>
+          <span class="drawer-status-badge" id="drawerStatus">● En producción</span>
         </div>
-        <div class="kanban-cards" id="colShippedCards"></div>
+        <button class="drawer-close-btn" onclick="closeDrawer()" aria-label="Cerrar panel">&times;</button>
       </div>
-
-      <!-- Columna En Curso (Now) -->
-      <div class="kanban-col col-now">
-        <div class="col-header">
-          <span class="col-title">● En Curso (Now)</span>
-          <span class="col-count" id="countNow">0</span>
-        </div>
-        <div class="kanban-cards" id="colNowCards"></div>
-      </div>
-
-      <!-- Columna Próximo (Next) -->
-      <div class="kanban-col col-next">
-        <div class="col-header">
-          <span class="col-title">○ Próximo (Next)</span>
-          <span class="col-count" id="countNext">0</span>
-        </div>
-        <div class="kanban-cards" id="colNextCards"></div>
-      </div>
-
-      <!-- Columna En Estudio (Later) -->
-      <div class="kanban-col col-later">
-        <div class="col-header">
-          <span class="col-title">◌ En Estudio (Later)</span>
-          <span class="col-count" id="countLater">0</span>
-        </div>
-        <div class="kanban-cards" id="colLaterCards"></div>
+      <h2 class="drawer-title" id="drawerTitle">Nombre de la Herramienta</h2>
+      <p class="drawer-desc" id="drawerDesc">Descripción de la herramienta...</p>
+      
+      <div class="drawer-cta-bar">
+        <a href="#" target="_blank" rel="noreferrer" class="drawer-btn-primary" id="drawerLiveBtn">
+          Probar Herramienta en Vivo ↗
+        </a>
+        <button class="drawer-btn-secondary" onclick="openFeedbackFromDrawer()">
+          💬 Hacer Consulta Técnica
+        </button>
       </div>
     </div>
-  </section>
 
-  <!-- Buzón de Ideas y Colaboraciones -->
-  <section class="buzon-section" id="buzon">
-    <h2>📬 Buzón de Ideas y Colaboraciones Institucionales</h2>
-    <p>¿Falta una herramienta que resolvería un cuello de botella recurrente en tu municipalidad, servicio público o cátedra? Cuéntame el problema o propón un desarrollo conjunto.</p>
-    
-    <form class="buzon-form" onsubmit="handleBuzonSubmit(event)">
-      <div class="form-group">
-        <label for="tipo">¿Qué necesitas?</label>
-        <select id="tipo" required>
-          <option value="pedido">💡 Pídeme construir una herramienta pública para mi sector</option>
-          <option value="alianza">🤝 Proponer una alianza de investigación o consultoría B2G</option>
-          <option value="mejora">⚡ Sugerir una nueva funcionalidad para el roadmap</option>
-        </select>
+    <div class="drawer-body">
+      <!-- Desafío & Origen -->
+      <div class="drawer-section">
+        <h3 class="drawer-section-title">El Problema Público / Origen</h3>
+        <p class="drawer-origin-text" id="drawerOrigin">Detalles del origen...</p>
       </div>
 
-      <div class="form-group">
-        <label for="nombre">Nombre y Organización (opcional)</label>
-        <input type="text" id="nombre" placeholder="Ej. Camila González, Municipalidad de Pudahuel / Fac. Gobierno UChile" required>
+      <!-- Hoja de Ruta del Proyecto -->
+      <div class="drawer-section">
+        <div class="drawer-section-head">
+          <h3 class="drawer-section-title">Hoja de Ruta del Proyecto</h3>
+          <span class="drawer-roadmap-count font-mono" id="drawerRoadmapCount">4 hitos</span>
+        </div>
+        
+        <div class="drawer-roadmap-tabs">
+          <button class="dr-tab active" data-drtab="shipped" onclick="switchDrawerRoadmapTab('shipped')">Entregado</button>
+          <button class="dr-tab" data-drtab="now" onclick="switchDrawerRoadmapTab('now')">En Curso</button>
+          <button class="dr-tab" data-drtab="next" onclick="switchDrawerRoadmapTab('next')">Próximo</button>
+          <button class="dr-tab" data-drtab="later" onclick="switchDrawerRoadmapTab('later')">En Estudio</button>
+        </div>
+
+        <div class="drawer-roadmap-list" id="drawerRoadmapList">
+          <!-- Renderizado dinámico de hitos -->
+        </div>
       </div>
 
-      <div class="form-group">
-        <label for="correo">Correo institucional de contacto</label>
-        <input type="email" id="correo" placeholder="tu-correo@institucion.cl" required>
+      <!-- Acompañamiento y Consultoría -->
+      <div class="drawer-section drawer-b2g-box">
+        <h4 class="b2g-box-title">¿Requiere adecuación para su municipio?</h4>
+        <p class="b2g-box-text">
+          Diseño de acuerdos de servicio, adecuación a la Ley N° 21.719 o capacitación técnica bajo estándares de Compra Ágil y Mercado Público.
+        </p>
+        <a href="https://evegat.cl/contacto/" target="_blank" class="b2g-box-link">
+          Consultar por Consultoría o TDRs Asociados →
+        </a>
       </div>
+    </div>
 
-      <div class="form-group">
-        <label for="descripcion">¿Cuál es el cuello de botella o propuesta concreta?</label>
-        <textarea id="descripcion" rows="4" placeholder="Explica qué trámite, norma o base de datos cuesta procesar y qué resultado esperas ver en pantalla..." required></textarea>
+    <div class="drawer-footer">
+      <div class="drawer-nav-actions">
+        <button class="drawer-nav-btn" id="drawerPrevBtn" onclick="navigateDrawer(-1)">← Anterior</button>
+        <span class="drawer-nav-info font-mono" id="drawerNavInfo">1 / 15</span>
+        <button class="drawer-nav-btn" id="drawerNextBtn" onclick="navigateDrawer(1)">Siguiente →</button>
       </div>
+    </div>
+  </aside>
 
-      <button type="submit" class="btn-submit">Enviar Propuesta al Buzón →</button>
-    </form>
-  </section>
-
-  <!-- Modal para Dudas y Observaciones -->
+  <!-- MODAL DE CONSULTA TÉCNICA / FEEDBACK -->
   <div class="modal-overlay" id="feedbackModal">
     <div class="modal-box">
       <div class="modal-header">
@@ -174,184 +366,524 @@ const countDatos = toolsData.filter(t => t.category === 'datos').length;
       <form onsubmit="handleFeedbackSubmit(event)">
         <input type="hidden" id="modalToolId">
         <input type="hidden" id="modalFeedbackType">
-        <div class="form-group" style="margin-bottom: 0.85rem;">
+        <div class="modal-field">
           <label id="modalInputLabel">Tu consulta u observación técnica:</label>
-          <textarea id="modalText" rows="4" required style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 6px;"></textarea>
+          <textarea id="modalText" rows="4" required placeholder="Describe tu duda, observación normativa o sugerencia de integración..."></textarea>
         </div>
-        <div class="form-group" style="margin-bottom: 1rem;">
-          <label>Tu correo (para responderte directamente):</label>
-          <input type="email" id="modalEmail" required style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 6px;">
+        <div class="modal-field">
+          <label for="modalEmail">Tu correo institucional (para responderte directamente):</label>
+          <input type="email" id="modalEmail" required placeholder="tu-correo@institucion.cl">
         </div>
-        <button type="submit" class="btn-submit" style="width: 100%;">Enviar Mensaje</button>
+        <button type="submit" class="btn-modal-submit">Enviar Mensaje Directo</button>
       </form>
     </div>
   </div>
 
+  <!-- FOOTER INSTITUCIONAL evegat.cl -->
+  <footer class="site-footer">
+    <div class="footer-shell">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <strong>Eduardo Vega Toledo</strong>
+          <p>Políticas públicas, datos territoriales y tecnología con responsabilidad institucional.</p>
+          <p class="footer-social">
+            <a href="mailto:eduardo@evegat.cl">eduardo@evegat.cl</a> · 
+            <a href="https://www.linkedin.com/in/evegat1989/" target="_blank" rel="noreferrer">LinkedIn</a> · 
+            <a href="https://github.com/evegat" target="_blank" rel="noreferrer">GitHub</a>
+          </p>
+        </div>
+        <nav class="footer-nav" aria-label="Enlaces de cierre">
+          <a href="https://evegat.cl">Inicio evegat.cl</a>
+          <a href="https://catalogo.evegat.cl/govtech">GovTech Chile</a>
+          <a href="https://catalogo.evegat.cl/civiltech">CivilTech Chile</a>
+          <a href="https://evegat.cl/privacidad/">Privacidad</a>
+          <a href="https://evegat.cl/accesibilidad/">Accesibilidad</a>
+        </nav>
+        <div class="footer-meta">
+          <p>© {new Date().getFullYear()} Eduardo Vega Toledo</p>
+          <p>Santiago, Chile · Actualizado con arnés MyWorld</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ESTILOS CANÓNICOS EVEGAT.CL + COMPONENTES -->
   <style>
-    .site-header {
-      max-width: 1200px;
-      margin: 2rem auto 1.5rem auto;
-      border-bottom: 2px solid var(--navy);
-      padding-bottom: 1.5rem;
+    /* NAVBAR SUPERIOR INSTITUCIONAL */
+    .top-nav-shell {
+      background: var(--archive-navy);
+      border-bottom: 1px solid #245486;
+      color: #edf4fb;
+      padding: 0.75rem 1.5rem;
     }
-    .header-top {
+    .top-nav-inner {
+      max-width: 1280px;
+      margin: 0 auto;
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
+      align-items: center;
       flex-wrap: wrap;
       gap: 1rem;
     }
-    .kicker {
-      font-family: var(--font-mono);
-      font-size: 0.8rem;
-      color: var(--navy-light);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 0.35rem;
+    .brand-block {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: #edf4fb;
     }
-    h1 {
-      font-size: 2.1rem;
-      color: var(--navy);
-      font-weight: 800;
-      letter-spacing: -0.025em;
+    .brand-mark {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      color: var(--archive-mint-accent);
+      border: 2px solid #edf4fb;
+      font-weight: 850;
+      font-size: 0.92rem;
+      letter-spacing: 0.04em;
+      font-family: var(--font-mono);
+      background: var(--archive-navy-deep);
+    }
+    .brand-text strong {
+      display: block;
+      color: #fff;
+      font-size: 0.95rem;
       line-height: 1.2;
     }
-    .lead {
-      color: var(--muted);
-      font-size: 1.05rem;
-      margin-top: 0.6rem;
-      max-width: 860px;
+    .brand-text small {
+      color: var(--archive-mint-accent);
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
-
-    .view-switcher {
-      display: flex;
-      gap: 0.5rem;
-      margin-top: 1.25rem;
-      background: #e2e8f0;
-      padding: 4px;
-      border-radius: 8px;
-      width: fit-content;
-    }
-    .view-btn {
-      background: transparent;
-      border: none;
-      padding: 0.5rem 1.15rem;
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--muted);
-      cursor: pointer;
-      border-radius: 6px;
-      transition: all 0.15s ease;
+    .nav-links {
       display: flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 1.25rem;
     }
-    .view-btn.active {
-      background: var(--paper);
-      color: var(--navy);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    .nav-links a {
+      color: #c7d7e8;
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 600;
+      transition: color 0.15s ease;
+    }
+    .nav-links a:hover {
+      color: var(--archive-mint-accent);
+    }
+    .btn-back-portafolio {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      padding: 0.35rem 0.75rem;
+      border-radius: var(--radius-sm);
+      color: #ffffff !important;
+    }
+    .btn-back-portafolio:hover {
+      background: rgba(255, 255, 255, 0.2);
     }
 
-    .controls-bar {
-      max-width: 1200px;
-      margin: 0 auto 1.5rem auto;
+    /* HERO EDITORIAL */
+    .hero-shell {
+      background: var(--archive-paper);
+      padding: 3rem 1.5rem 2rem 1.5rem;
+      border-bottom: 1px solid var(--archive-line);
+    }
+    .hero-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    .archive-kicker {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--archive-mint);
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+    h1 {
+      font-size: clamp(2.3rem, 3.8vw, 3.4rem);
+      line-height: 1.05;
+      color: var(--archive-ink);
+      max-width: 980px;
+      margin-bottom: 1rem;
+    }
+    .hero-lead {
+      max-width: 860px;
+      font-size: 1.05rem;
+      line-height: 1.6;
+      color: var(--archive-muted);
+      margin-bottom: 1.75rem;
+    }
+
+    /* TRUST BAR */
+    .trust-bar {
       display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.6rem 1.25rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid rgba(29, 77, 145, 0.18);
+      font-size: 0.85rem;
+      color: var(--archive-muted);
+    }
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .trust-item strong {
+      color: var(--archive-ink);
+      font-weight: 750;
+    }
+    .trust-sep {
+      color: rgba(29, 77, 145, 0.35);
+      user-select: none;
+    }
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--archive-mint);
+      display: inline-block;
+      box-shadow: 0 0 0 2px rgba(84, 185, 149, 0.25);
+    }
+
+    /* APP SHELL & SWITCHER */
+    .app-shell {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 1.75rem 1.5rem 4rem 1.5rem;
+      flex: 1;
+      width: 100%;
+    }
+    .view-switcher-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       flex-wrap: wrap;
       gap: 1rem;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.75rem 0;
+      margin-bottom: 1.25rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--archive-line);
     }
-    .filter-group {
+    .view-tabs {
       display: flex;
-      flex-wrap: wrap;
-      gap: 0.4rem;
-      align-items: center;
+      background: #e7e2d4;
+      padding: 4px;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(29, 77, 145, 0.15);
     }
-    .filter-btn {
-      background: var(--paper);
-      border: 1px solid var(--border);
-      padding: 0.4rem 0.85rem;
-      border-radius: 999px;
-      font-size: 0.82rem;
-      font-weight: 500;
-      color: var(--muted);
+    .view-tab {
+      background: transparent;
+      border: none;
+      padding: 0.55rem 1.2rem;
+      font-size: 0.88rem;
+      font-weight: 650;
+      color: var(--archive-muted);
       cursor: pointer;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
       transition: all 0.15s ease;
     }
-    .filter-btn:hover {
-      border-color: var(--navy-light);
-      color: var(--navy);
+    .view-tab.active {
+      background: var(--archive-surface);
+      color: var(--archive-navy);
+      box-shadow: 0 1px 3px rgba(6, 35, 74, 0.12);
     }
-    .filter-btn.active {
-      background: var(--navy);
+    .tab-badge {
+      background: #e2e8f0;
+      color: var(--archive-navy);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      padding: 1px 6px;
+      border-radius: 999px;
+      font-weight: 700;
+    }
+    .view-tab.active .tab-badge {
+      background: var(--archive-navy);
       color: #fff;
-      border-color: var(--navy);
     }
 
-    .search-box {
+    /* SEARCH BOX */
+    .search-wrap {
       position: relative;
-      min-width: 260px;
+      min-width: 320px;
+      flex: 1;
+      max-width: 480px;
+    }
+    .search-glyph {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.85rem;
+      color: var(--archive-muted);
+      pointer-events: none;
     }
     .search-input {
       width: 100%;
-      padding: 0.45rem 0.85rem 0.45rem 2rem;
-      border: 1px solid var(--border-strong);
-      border-radius: 6px;
+      padding: 0.55rem 2rem 0.55rem 2.2rem;
+      background: var(--archive-surface);
+      border: 1px solid var(--archive-line);
+      border-radius: var(--radius-md);
       font-size: 0.85rem;
       font-family: var(--font-sans);
-      background: var(--paper);
+      color: var(--archive-ink);
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);
     }
-    .search-icon {
+    .search-input:focus {
+      outline: none;
+      border-color: var(--archive-blue);
+      box-shadow: 0 0 0 3px rgba(11, 74, 162, 0.15);
+    }
+    .search-clear {
       position: absolute;
-      left: 0.65rem;
+      right: 8px;
       top: 50%;
       transform: translateY(-50%);
-      color: var(--muted);
-      font-size: 0.85rem;
+      background: none;
+      border: none;
+      font-size: 1.1rem;
+      color: var(--archive-muted);
+      cursor: pointer;
+      padding: 2px 6px;
     }
 
+    /* FILTROS PILLS */
+    .filter-pills-bar {
+      margin-bottom: 1.5rem;
+    }
+    .pills-scroll {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .pill-btn {
+      background: var(--archive-surface);
+      border: 1px solid var(--archive-line);
+      padding: 0.4rem 0.9rem;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--archive-muted);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+    .pill-btn:hover {
+      border-color: var(--archive-blue);
+      color: var(--archive-blue);
+    }
+    .pill-btn.active {
+      background: var(--archive-navy);
+      color: #ffffff;
+      border-color: var(--archive-navy);
+    }
+    .pill-count {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      opacity: 0.85;
+    }
+
+    /* FOCUS BANNER */
     .project-focus-banner {
-      max-width: 1200px;
-      margin: 0 auto 1.25rem auto;
-      background: #eff6ff;
+      background: #e8f0fe;
       border: 1px solid #bfdbfe;
-      border-left: 4px solid var(--navy-light);
+      border-left: 4px solid var(--archive-blue);
       padding: 0.75rem 1rem;
-      border-radius: 6px;
+      border-radius: var(--radius-sm);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 0.88rem;
+      margin-bottom: 1.5rem;
+    }
+    .focus-badge {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 700;
+      background: var(--archive-blue);
+      color: #fff;
+      padding: 2px 6px;
+      border-radius: 3px;
+      margin-right: 8px;
     }
     .btn-reset-focus {
-      background: #ffffff;
+      background: #fff;
       border: 1px solid #bfdbfe;
-      color: var(--navy-light);
-      font-size: 0.8rem;
-      font-weight: 600;
-      padding: 0.3rem 0.6rem;
-      border-radius: 4px;
+      color: var(--archive-blue);
+      font-size: 0.78rem;
+      font-weight: 650;
+      padding: 0.35rem 0.75rem;
+      border-radius: var(--radius-sm);
       cursor: pointer;
     }
 
-    .grid {
-      max-width: 1200px;
-      margin: 0 auto;
+    /* GRID DE TARJETAS DEL CATÁLOGO */
+    .tools-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-      gap: 1.25rem;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 1.5rem;
+    }
+    .tool-card {
+      background: var(--archive-surface);
+      border: 1px solid var(--archive-line);
+      border-radius: var(--radius-md);
+      padding: 1.4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 1px 2px rgba(16, 21, 28, 0.04);
+      position: relative;
+    }
+    .tool-card:hover {
+      border-color: var(--archive-line-strong);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(6, 35, 74, 0.08);
+    }
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+    .card-badges {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .card-code {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 750;
+      color: var(--archive-navy);
+      background: #eef4fb;
+      padding: 2px 6px;
+      border-radius: 3px;
+      border: 1px solid rgba(11, 74, 162, 0.2);
+    }
+    .card-category {
+      font-size: 0.7rem;
+      font-weight: 650;
+      padding: 2px 7px;
+      border-radius: 3px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .cat-govtech { background: #e0f2fe; color: #0369a1; }
+    .cat-civiltech { background: #dcfce7; color: #15803d; }
+    .cat-docencia { background: #fef3c7; color: #b45309; }
+    .cat-datos { background: #f1f5f9; color: #475569; }
+
+    .card-status {
+      font-size: 0.72rem;
+      font-weight: 650;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: var(--archive-mint);
+    }
+    .tool-card h3 {
+      font-size: 1.25rem;
+      line-height: 1.25;
+      margin-bottom: 0.6rem;
+    }
+    .tool-card h3 a {
+      color: var(--archive-ink);
+      text-decoration: none;
+    }
+    .tool-card h3 a:hover {
+      color: var(--archive-blue);
+    }
+    .card-desc {
+      color: var(--archive-muted);
+      font-size: 0.85rem;
+      line-height: 1.5;
+      margin-bottom: 1.25rem;
+      flex-grow: 1;
     }
 
-    .roadmap-view {
-      max-width: 1200px;
-      margin: 0 auto;
+    /* MINI PROGRESS ROADMAP EN TARJETA */
+    .card-roadmap-summary {
+      background: #faf8f5;
+      border: 1px solid #ebd9c8;
+      border-radius: var(--radius-sm);
+      padding: 0.6rem 0.8rem;
+      margin-bottom: 1.15rem;
+      font-size: 0.75rem;
+      color: var(--archive-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
-    .roadmap-header {
-      background: var(--paper);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.25rem;
+    .summary-text strong {
+      color: var(--archive-navy);
+    }
+    .summary-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 4px;
+    }
+
+    /* ACCIONES DE TARJETA */
+    .card-actions {
+      display: flex;
+      gap: 0.6rem;
+      align-items: center;
+      padding-top: 0.85rem;
+      border-top: 1px solid rgba(29, 77, 145, 0.12);
+    }
+    .btn-card-explore {
+      flex: 1;
+      background: #f1f5f9;
+      color: var(--archive-navy);
+      border: 1px solid #cbd5e1;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 0.55rem 0.8rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s ease;
+    }
+    .btn-card-explore:hover {
+      background: var(--archive-navy);
+      color: #ffffff;
+      border-color: var(--archive-navy);
+    }
+    .btn-card-live {
+      background: var(--archive-blue);
+      color: #ffffff;
+      border: none;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 0.55rem 0.9rem;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: background 0.15s ease;
+    }
+    .btn-card-live:hover {
+      background: var(--archive-blue-hover);
+    }
+
+    /* VISTA DE ROADMAP */
+    .roadmap-toolbar {
+      background: var(--archive-surface);
+      border: 1px solid var(--archive-line);
+      border-radius: var(--radius-md);
+      padding: 1.25rem 1.5rem;
       margin-bottom: 1.5rem;
       display: flex;
       justify-content: space-between;
@@ -359,205 +891,751 @@ const countDatos = toolsData.filter(t => t.category === 'datos').length;
       flex-wrap: wrap;
       gap: 1rem;
     }
-    .roadmap-header-text h2 {
-      font-size: 1.35rem;
-      color: var(--navy);
-      font-weight: 700;
-      margin-bottom: 0.25rem;
+    .roadmap-toolbar-info h2 {
+      font-size: 1.4rem;
+      margin-bottom: 0.2rem;
     }
-    .roadmap-header-text p {
-      font-size: 0.88rem;
-      color: var(--muted);
-    }
-    .roadmap-project-select {
-      padding: 0.45rem 0.75rem;
-      border: 1px solid var(--border-strong);
-      border-radius: 6px;
+    .roadmap-toolbar-info p {
+      color: var(--archive-muted);
       font-size: 0.85rem;
-      font-family: var(--font-sans);
+    }
+    .roadmap-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .roadmap-mode-switch {
+      display: flex;
+      background: #e7e2d4;
+      padding: 3px;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(29, 77, 145, 0.15);
+    }
+    .mode-btn {
+      background: transparent;
+      border: none;
+      padding: 0.4rem 0.8rem;
+      font-size: 0.78rem;
+      font-weight: 650;
+      color: var(--archive-muted);
+      cursor: pointer;
+      border-radius: 3px;
+    }
+    .mode-btn.active {
       background: #ffffff;
-      color: var(--navy);
-      font-weight: 600;
+      color: var(--archive-navy);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+    }
+    .project-select {
+      background: #ffffff;
+      border: 1px solid var(--archive-line);
+      padding: 0.45rem 0.85rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 650;
+      color: var(--archive-navy);
+      cursor: pointer;
     }
 
+    /* KANBAN GRID */
     .kanban-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 1.25rem;
+      gap: 1.2rem;
       align-items: start;
     }
-    @media (max-width: 1024px) {
-      .kanban-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 640px) {
-      .kanban-grid { grid-template-columns: 1fr; }
-    }
-
     .kanban-col {
-      background: #f1f5f9;
-      border-radius: var(--radius);
-      padding: 0.9rem;
-      border: 1px solid var(--border);
+      background: #f7f4ed;
+      border: 1px solid rgba(29, 77, 145, 0.18);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      min-height: 480px;
     }
     .col-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 0.85rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 2px solid var(--border-strong);
+      margin-bottom: 0.35rem;
     }
-    .col-title {
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: var(--navy);
+    .col-title-group {
       display: flex;
       align-items: center;
-      gap: 0.4rem;
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
+      gap: 7px;
+    }
+    .status-indicator {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+    }
+    .status-indicator.shipped { background: var(--archive-mint); }
+    .status-indicator.now { background: #0284c7; box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.25); }
+    .status-indicator.next { background: #f59e0b; }
+    .status-indicator.later { background: #94a3b8; }
+
+    .col-title {
+      font-size: 0.95rem;
+      font-weight: 750;
+      color: var(--archive-navy);
     }
     .col-count {
-      background: #ffffff;
-      border: 1px solid var(--border);
-      padding: 0.15rem 0.45rem;
-      border-radius: 999px;
-      font-size: 0.75rem;
       font-family: var(--font-mono);
-      font-weight: 700;
-      color: var(--muted);
+      font-size: 0.75rem;
+      font-weight: 750;
+      background: #ffffff;
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(29, 77, 145, 0.15);
+      color: var(--archive-navy);
+    }
+    .col-sub {
+      font-size: 0.72rem;
+      color: var(--archive-muted);
+      margin-bottom: 1rem;
+      font-style: italic;
+    }
+    .col-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
     }
 
-    .col-shipped { border-top: 3px solid #10b981; }
-    .col-now { border-top: 3px solid var(--navy); }
-    .col-next { border-top: 3px solid #0284c7; }
-    .col-later { border-top: 3px solid #94a3b8; }
+    /* TARJETA INDIVIDUAL DE HITO EN ROADMAP */
+    .kanban-card {
+      background: var(--archive-surface);
+      border: 1px solid var(--archive-line);
+      border-radius: var(--radius-sm);
+      padding: 0.9rem;
+      box-shadow: 0 1px 2px rgba(16, 21, 28, 0.03);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .kanban-card:hover {
+      border-color: var(--archive-blue);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(6, 35, 74, 0.08);
+    }
+    .kc-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.4rem;
+    }
+    .kc-code {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 750;
+      color: var(--archive-navy);
+    }
+    .kc-tag {
+      font-size: 0.65rem;
+      font-weight: 650;
+      color: var(--archive-muted);
+      background: #f1f5f9;
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+    .kc-title {
+      font-family: var(--font-sans);
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--archive-ink);
+      margin-bottom: 0.35rem;
+      line-height: 1.3;
+    }
+    .kc-desc {
+      font-size: 0.78rem;
+      color: var(--archive-muted);
+      line-height: 1.45;
+    }
 
-    .kanban-cards {
+    /* MODO TIMELINE */
+    .timeline-view {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      position: relative;
+      padding-left: 1.5rem;
+    }
+    .timeline-view::before {
+      content: '';
+      position: absolute;
+      left: 7px;
+      top: 15px;
+      bottom: 15px;
+      width: 2px;
+      background: var(--archive-line-strong);
+    }
+    .timeline-group {
+      position: relative;
+    }
+    .timeline-group-badge {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 750;
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+      letter-spacing: 0.05em;
+    }
+    .timeline-group-badge.shipped { background: var(--archive-mint-light); color: var(--archive-mint); border: 1px solid var(--archive-mint); }
+    .timeline-group-badge.now { background: #e0f2fe; color: #0284c7; border: 1px solid #0284c7; }
+    .timeline-group-badge.next { background: #fef3c7; color: #b45309; border: 1px solid #b45309; }
+    .timeline-group-badge.later { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
+    .timeline-items {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1rem;
+    }
+
+    /* SLIDE-OVER DRAWER */
+    .drawer-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(4, 26, 55, 0.4);
+      backdrop-filter: blur(2px);
+      z-index: 998;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .drawer-backdrop.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .slide-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: min(580px, 94vw);
+      background: #ffffff;
+      z-index: 999;
+      box-shadow: -10px 0 35px rgba(6, 35, 74, 0.16);
+      display: flex;
+      flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .slide-drawer.active {
+      transform: translateX(0);
+    }
+    .drawer-header {
+      background: var(--archive-paper);
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--archive-line);
+    }
+    .drawer-header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+    .drawer-meta-badges {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .drawer-code {
+      background: var(--archive-navy);
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 750;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+    .drawer-category-badge {
+      font-size: 0.75rem;
+      font-weight: 650;
+      color: var(--archive-navy);
+      background: #eef4fb;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .drawer-status-badge {
+      font-size: 0.75rem;
+      font-weight: 650;
+      color: var(--archive-mint);
+    }
+    .drawer-close-btn {
+      background: none;
+      border: 1px solid var(--archive-line);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 1.25rem;
+      color: var(--archive-muted);
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+    }
+    .drawer-close-btn:hover {
+      background: #ffffff;
+      color: var(--archive-ink);
+    }
+    .drawer-title {
+      font-size: 1.65rem;
+      margin-bottom: 0.5rem;
+      line-height: 1.2;
+    }
+    .drawer-desc {
+      color: var(--archive-muted);
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin-bottom: 1.2rem;
+    }
+    .drawer-cta-bar {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .drawer-btn-primary {
+      background: var(--archive-blue);
+      color: #fff;
+      text-decoration: none;
+      padding: 0.6rem 1.2rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      border-radius: var(--radius-sm);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .drawer-btn-primary:hover {
+      background: var(--archive-blue-hover);
+    }
+    .drawer-btn-secondary {
+      background: #ffffff;
+      border: 1px solid var(--archive-line);
+      color: var(--archive-navy);
+      padding: 0.6rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 650;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+    }
+
+    .drawer-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.75rem;
+    }
+    .drawer-section-title {
+      font-size: 1.15rem;
+      margin-bottom: 0.6rem;
+      color: var(--archive-navy);
+    }
+    .drawer-origin-text {
+      font-size: 0.88rem;
+      line-height: 1.6;
+      color: var(--archive-muted);
+      background: #fbf9f4;
+      padding: 0.85rem 1rem;
+      border-left: 3px solid var(--archive-blue);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    }
+    .drawer-section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+    .drawer-roadmap-count {
+      font-size: 0.78rem;
+      color: var(--archive-muted);
+    }
+    .drawer-roadmap-tabs {
+      display: flex;
+      gap: 4px;
+      background: #f1f5f9;
+      padding: 3px;
+      border-radius: var(--radius-sm);
+      margin-bottom: 1rem;
+    }
+    .dr-tab {
+      flex: 1;
+      background: transparent;
+      border: none;
+      padding: 0.35rem;
+      font-size: 0.75rem;
+      font-weight: 650;
+      color: var(--archive-muted);
+      cursor: pointer;
+      border-radius: 3px;
+    }
+    .dr-tab.active {
+      background: #ffffff;
+      color: var(--archive-navy);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+    }
+    .drawer-roadmap-list {
       display: flex;
       flex-direction: column;
       gap: 0.75rem;
     }
-
-    .buzon-section {
-      max-width: 1200px;
-      margin: 4rem auto 0 auto;
+    .drawer-item-card {
+      border: 1px solid var(--archive-line);
+      border-radius: var(--radius-sm);
+      padding: 0.85rem;
       background: #ffffff;
-      border: 2px dashed var(--border-strong);
-      border-radius: var(--radius);
-      padding: 2.5rem 1.5rem;
-      text-align: center;
     }
-    .buzon-section h2 {
-      color: var(--navy);
-      font-size: 1.65rem;
-      font-weight: 800;
-      margin-bottom: 0.4rem;
+    .drawer-item-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.35rem;
     }
-    .buzon-section p {
-      color: var(--muted);
-      max-width: 650px;
-      margin: 0 auto 1.5rem auto;
+    .drawer-item-title {
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--archive-ink);
+    }
+    .drawer-item-desc {
+      font-size: 0.8rem;
+      color: var(--archive-muted);
+      line-height: 1.45;
+    }
+
+    .drawer-b2g-box {
+      background: #edf4fb;
+      border: 1px solid #bfdbfe;
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+    }
+    .b2g-box-title {
+      font-size: 0.98rem;
+      color: var(--archive-navy);
+      margin-bottom: 0.35rem;
+      font-family: var(--font-sans);
+      font-weight: 750;
+    }
+    .b2g-box-text {
+      font-size: 0.84rem;
+      color: var(--archive-muted);
+      line-height: 1.5;
+      margin-bottom: 0.75rem;
+    }
+    .b2g-box-link {
+      font-size: 0.84rem;
+      font-weight: 750;
+      color: var(--archive-blue);
+      text-decoration: none;
+    }
+    .b2g-box-link:hover {
+      text-decoration: underline;
+    }
+
+    .drawer-footer {
+      background: var(--archive-paper);
+      padding: 0.85rem 1.5rem;
+      border-top: 1px solid var(--archive-line);
+    }
+    .drawer-nav-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .drawer-nav-btn {
+      background: #ffffff;
+      border: 1px solid var(--archive-line);
+      padding: 0.35rem 0.75rem;
+      font-size: 0.8rem;
+      font-weight: 650;
+      color: var(--archive-navy);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+    }
+    .drawer-nav-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .drawer-nav-info {
+      font-size: 0.8rem;
+      color: var(--archive-muted);
+    }
+
+    /* PROPOSAL SECTION */
+    .proposal-section {
+      margin-top: 3.5rem;
+      border-top: 1px solid var(--archive-line);
+      padding-top: 3rem;
+    }
+    .proposal-card {
+      background: var(--archive-surface);
+      border: 1px solid var(--archive-line);
+      border-radius: var(--radius-md);
+      padding: 2.2rem;
+      box-shadow: 0 1px 3px rgba(16, 21, 28, 0.04);
+    }
+    .proposal-header h2 {
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+    }
+    .proposal-lead {
+      color: var(--archive-muted);
       font-size: 0.95rem;
+      line-height: 1.55;
+      max-width: 820px;
+      margin-bottom: 1.75rem;
     }
-    .buzon-form {
-      max-width: 620px;
-      margin: 0 auto;
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      margin-bottom: 1rem;
+    }
+    .form-field {
       display: flex;
       flex-direction: column;
-      gap: 0.85rem;
-      text-align: left;
+      gap: 0.4rem;
+      margin-bottom: 1rem;
     }
-    .form-group label {
-      display: block;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--navy);
-      margin-bottom: 0.25rem;
+    .form-field label {
+      font-size: 0.82rem;
+      font-weight: 650;
+      color: var(--archive-navy);
     }
-    .form-group input, .form-group textarea, .form-group select {
-      width: 100%;
-      padding: 0.55rem 0.75rem;
-      border: 1px solid var(--border-strong);
-      border-radius: 6px;
+    .form-field input, .form-field textarea {
+      padding: 0.6rem 0.85rem;
+      border: 1px solid var(--archive-line);
+      border-radius: var(--radius-sm);
+      font-size: 0.88rem;
       font-family: var(--font-sans);
-      font-size: 0.9rem;
+      background: #ffffff;
+      color: var(--archive-ink);
     }
-    .btn-submit {
-      background: var(--navy);
-      color: #fff;
+    .form-field input:focus, .form-field textarea:focus {
+      outline: none;
+      border-color: var(--archive-blue);
+      box-shadow: 0 0 0 3px rgba(11, 74, 162, 0.12);
+    }
+    .proposal-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+    }
+    .btn-submit-proposal {
+      background: var(--archive-navy);
+      color: #ffffff;
       border: none;
-      padding: 0.65rem 1.25rem;
-      border-radius: 6px;
-      font-weight: 600;
+      padding: 0.75rem 1.6rem;
+      font-size: 0.88rem;
+      font-weight: 750;
+      border-radius: var(--radius-sm);
       cursor: pointer;
-      font-size: 0.92rem;
-      align-self: flex-start;
       transition: background 0.15s ease;
     }
-    .btn-submit:hover { background: var(--navy-light); }
+    .btn-submit-proposal:hover {
+      background: var(--archive-navy-deep);
+    }
+    .proposal-privacy-note {
+      font-size: 0.78rem;
+      color: var(--archive-muted);
+    }
 
+    /* MODAL DE FEEDBACK */
     .modal-overlay {
-      display: none;
       position: fixed;
       inset: 0;
-      background: rgba(15, 23, 42, 0.65);
+      background: rgba(4, 26, 55, 0.5);
       backdrop-filter: blur(2px);
-      z-index: 100;
+      z-index: 1000;
+      display: none;
       align-items: center;
       justify-content: center;
       padding: 1rem;
     }
-    .modal-overlay.active { display: flex; }
     .modal-box {
-      background: #fff;
+      background: #ffffff;
+      border-radius: var(--radius-md);
       max-width: 500px;
       width: 100%;
-      border-radius: var(--radius);
-      padding: 1.5rem;
-      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.15);
+      padding: 1.75rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
     .modal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 1rem;
+      margin-bottom: 1.25rem;
     }
-    .modal-header h3 { font-size: 1.15rem; color: var(--navy); font-weight: 700; }
+    .modal-header h3 {
+      font-size: 1.25rem;
+      color: var(--archive-navy);
+    }
     .modal-close {
       background: none;
       border: none;
       font-size: 1.5rem;
+      color: var(--archive-muted);
       cursor: pointer;
-      color: var(--muted);
+    }
+    .modal-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      margin-bottom: 1rem;
+    }
+    .modal-field label {
+      font-size: 0.82rem;
+      font-weight: 650;
+      color: var(--archive-navy);
+    }
+    .modal-field textarea, .modal-field input {
+      padding: 0.6rem;
+      border: 1px solid #cbd5e1;
+      border-radius: var(--radius-sm);
+      font-size: 0.88rem;
+    }
+    .btn-modal-submit {
+      width: 100%;
+      background: var(--archive-blue);
+      color: #fff;
+      border: none;
+      padding: 0.7rem;
+      font-size: 0.88rem;
+      font-weight: 750;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+    }
+
+    /* FOOTER INSTITUCIONAL */
+    .site-footer {
+      background: var(--archive-navy-deep);
+      color: #edf4fb;
+      padding: 3rem 1.5rem 2.5rem 1.5rem;
+      margin-top: auto;
+      border-top: 1px solid #245486;
+    }
+    .footer-shell {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr;
+      gap: 2.5rem;
+      align-items: start;
+    }
+    .footer-brand strong {
+      font-size: 1.1rem;
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #ffffff;
+    }
+    .footer-brand p {
+      font-size: 0.82rem;
+      color: #a5b5c9;
+      line-height: 1.5;
+    }
+    .footer-social {
+      margin-top: 0.85rem;
+      font-size: 0.82rem;
+    }
+    .footer-social a {
+      color: #cbd7e5;
+      text-decoration: none;
+    }
+    .footer-social a:hover {
+      color: var(--archive-mint-accent);
+    }
+    .footer-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+    .footer-nav a {
+      color: #cbd7e5;
+      text-decoration: none;
+      font-size: 0.82rem;
+    }
+    .footer-nav a:hover {
+      color: var(--archive-mint-accent);
+    }
+    .footer-meta {
+      font-size: 0.78rem;
+      color: #7e9fc5;
+      text-align: right;
+      line-height: 1.6;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 1024px) {
+      .kanban-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 768px) {
+      .kanban-grid {
+        grid-template-columns: 1fr;
+      }
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      .footer-meta {
+        text-align: left;
+      }
+      .top-nav-inner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .nav-links {
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+      .view-switcher-bar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .search-wrap {
+        max-width: 100%;
+        min-width: 100%;
+      }
     }
   </style>
 
-  <!-- Client-side logic for Deep Linking, Filtering and Interaction -->
+  <!-- CLIENT-SIDE SCRIPT: NAVEGACIÓN REACTIVA, DRAWER Y ROADMAP -->
   <script is:inline define:vars={{ toolsData }}>
     let currentView = 'catalog';
     let currentCategory = 'all';
+    let currentSearch = '';
     let focusedProject = null;
-    let searchQuery = '';
+    let roadmapMode = 'kanban';
+    let activeDrawerIndex = -1;
+    let activeDrawerTab = 'shipped';
 
-    function initFromUrl() {
+    // Inicialización al cargar la página
+    window.addEventListener('DOMContentLoaded', () => {
+      parseUrlParams();
+      renderAll();
+      setupKeyboardShortcuts();
+    });
+
+    // Parsea parámetros de URL (?view=roadmap, ?p=P090, ?cat=govtech)
+    function parseUrlParams() {
       const params = new URLSearchParams(window.location.search);
-      const viewParam = params.get('view') || params.get('tab');
-      if (viewParam === 'roadmap') currentView = 'roadmap';
-      
-      const catParam = params.get('cat');
-      if (['govtech', 'civiltech', 'docencia', 'datos'].includes(catParam)) {
-        currentCategory = catParam;
-      }
+      const p = params.get('p');
+      const v = params.get('view');
+      const c = params.get('cat');
 
-      const pParam = params.get('p') || params.get('tool');
-      if (pParam) {
-        const match = toolsData.find(t => t.code.toLowerCase() === pParam.toLowerCase() || t.id.toLowerCase() === pParam.toLowerCase());
-        if (match) focusedProject = match.code;
+      if (v === 'roadmap' || v === 'catalog') {
+        currentView = v;
       }
-
-      updateCategoryButtons();
-      syncView();
+      if (c && ['govtech', 'civiltech', 'docencia', 'datos'].includes(c)) {
+        currentCategory = c;
+      }
+      if (p) {
+        focusedProject = p.toUpperCase();
+      }
     }
 
     function syncUrl() {
@@ -566,273 +1644,387 @@ const countDatos = toolsData.filter(t => t.category === 'datos').length;
       if (currentCategory !== 'all') params.set('cat', currentCategory);
       if (focusedProject) params.set('p', focusedProject);
 
-      const newUrl = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
-      history.replaceState(null, '', newUrl);
+      const qs = params.toString();
+      const newUrl = qs ? `${window.location.pathname}?${qs}` : window.location.pathname;
+      window.history.replaceState({}, '', newUrl);
     }
 
-    window.switchView = function(view) {
+    function switchView(view) {
       currentView = view;
-      syncView();
       syncUrl();
-    };
-
-    function syncView() {
-      document.getElementById('tabBtnCatalog').classList.toggle('active', currentView === 'catalog');
-      document.getElementById('tabBtnRoadmap').classList.toggle('active', currentView === 'roadmap');
-
-      document.getElementById('catalogView').style.display = currentView === 'catalog' ? 'block' : 'none';
-      document.getElementById('roadmapView').style.display = currentView === 'roadmap' ? 'block' : 'none';
-
-      updateFocusBanner();
-      if (currentView === 'catalog') renderCatalog();
-      else renderRoadmap();
+      renderAll();
     }
 
-    window.setCategoryFilter = function(cat) {
-      currentCategory = cat;
-      updateCategoryButtons();
-      if (currentView === 'catalog') renderCatalog();
-      else renderRoadmap();
-      syncUrl();
-    };
-
-    function updateCategoryButtons() {
-      document.querySelectorAll('.filter-btn').forEach(btn => {
-        const text = btn.innerText.toLowerCase();
-        if (currentCategory === 'all' && text.includes('todas')) btn.classList.add('active');
-        else if (currentCategory !== 'all' && text.includes(currentCategory)) btn.classList.add('active');
-        else btn.classList.remove('active');
-      });
-    }
-
-    window.setProjectFocus = function(projectCode) {
-      focusedProject = projectCode;
-      document.getElementById('projectSelector').value = projectCode || 'all';
-      updateFocusBanner();
-      if (currentView === 'catalog') renderCatalog();
-      else renderRoadmap();
-      syncUrl();
-    };
-
-    window.clearProjectFocus = function() {
-      focusedProject = null;
-      document.getElementById('projectSelector').value = 'all';
-      updateFocusBanner();
-      if (currentView === 'catalog') renderCatalog();
-      else renderRoadmap();
-      syncUrl();
-    };
-
-    function updateFocusBanner() {
-      const banner = document.getElementById('projectFocusBanner');
-      if (focusedProject) {
-        const tool = toolsData.find(t => t.code === focusedProject);
-        document.getElementById('projectFocusLabel').innerText = `${tool ? tool.code + ' — ' + tool.name : focusedProject}`;
-        banner.style.display = 'flex';
-      } else {
-        banner.style.display = 'none';
+    function switchRoadmapMode(mode) {
+      roadmapMode = mode;
+      document.getElementById('btnModeKanban').classList.toggle('active', mode === 'kanban');
+      document.getElementById('btnModeTimeline').classList.toggle('active', mode === 'timeline');
+      document.getElementById('kanbanContainer').style.display = mode === 'kanban' ? 'grid' : 'none';
+      document.getElementById('timelineContainer').style.display = mode === 'timeline' ? 'flex' : 'none';
+      if (mode === 'timeline') {
+        renderTimeline();
       }
     }
 
-    window.handleSearch = function(q) {
-      searchQuery = q.trim().toLowerCase();
-      if (currentView === 'catalog') renderCatalog();
-      else renderRoadmap();
-    };
+    function setCategoryFilter(cat) {
+      currentCategory = cat;
+      document.querySelectorAll('.pill-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.cat === cat);
+      });
+      syncUrl();
+      renderAll();
+    }
 
-    window.handleProjectSelect = function(val) {
-      if (val === 'all') window.clearProjectFocus();
-      else window.setProjectFocus(val);
-    };
+    function handleSearch(query) {
+      currentSearch = query.trim().toLowerCase();
+      document.getElementById('searchClearBtn').style.display = currentSearch ? 'block' : 'none';
+      renderAll();
+    }
 
+    function clearSearch() {
+      document.getElementById('searchInput').value = '';
+      currentSearch = '';
+      document.getElementById('searchClearBtn').style.display = 'none';
+      renderAll();
+    }
+
+    function handleProjectSelect(code) {
+      focusedProject = code === 'all' ? null : code;
+      syncUrl();
+      renderAll();
+    }
+
+    function clearProjectFocus() {
+      focusedProject = null;
+      document.getElementById('projectSelector').value = 'all';
+      syncUrl();
+      renderAll();
+    }
+
+    function resetAllFilters() {
+      currentCategory = 'all';
+      currentSearch = '';
+      focusedProject = null;
+      document.getElementById('searchInput').value = '';
+      document.getElementById('searchClearBtn').style.display = 'none';
+      document.getElementById('projectSelector').value = 'all';
+      document.querySelectorAll('.pill-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === 'all'));
+      syncUrl();
+      renderAll();
+    }
+
+    // Filtrar herramientas según estado
     function getFilteredTools() {
       return toolsData.filter(t => {
-        if (currentCategory !== 'all' && t.category !== currentCategory) return false;
-        if (focusedProject && t.code !== focusedProject) return false;
-        if (searchQuery) {
-          return (t.name + ' ' + t.desc + ' ' + t.origin + ' ' + t.code).toLowerCase().includes(searchQuery);
+        // Filtro por proyecto en foco
+        if (focusedProject && t.code !== focusedProject) {
+          return false;
+        }
+        // Filtro por categoría
+        if (currentCategory !== 'all' && t.category !== currentCategory) {
+          return false;
+        }
+        // Filtro por búsqueda
+        if (currentSearch) {
+          const matchCode = t.code.toLowerCase().includes(currentSearch);
+          const matchName = t.name.toLowerCase().includes(currentSearch);
+          const matchDesc = t.desc.toLowerCase().includes(currentSearch);
+          const matchOrigin = t.origin.toLowerCase().includes(currentSearch);
+          return matchCode || matchName || matchDesc || matchOrigin;
         }
         return true;
       });
     }
 
+    function renderAll() {
+      // Sincronizar UI de pestañas
+      document.getElementById('tabBtnCatalog').classList.toggle('active', currentView === 'catalog');
+      document.getElementById('tabBtnRoadmap').classList.toggle('active', currentView === 'roadmap');
+      document.getElementById('catalogView').style.display = currentView === 'catalog' ? 'block' : 'none';
+      document.getElementById('roadmapView').style.display = currentView === 'roadmap' ? 'block' : 'none';
+
+      // Sincronizar banner de foco
+      const banner = document.getElementById('projectFocusBanner');
+      if (focusedProject) {
+        banner.style.display = 'flex';
+        document.getElementById('projectFocusLabel').textContent = focusedProject;
+        document.getElementById('projectSelector').value = focusedProject;
+      } else {
+        banner.style.display = 'none';
+      }
+
+      if (currentView === 'catalog') {
+        renderCatalog();
+      } else {
+        renderRoadmap();
+      }
+    }
+
+    // RENDERIZADO DEL CATÁLOGO
     function renderCatalog() {
-      const grid = document.getElementById('toolsGrid');
-      grid.innerHTML = '';
       const filtered = getFilteredTools();
+      const container = document.getElementById('toolsGrid');
+      const emptyState = document.getElementById('noResultsCatalog');
 
       if (filtered.length === 0) {
-        grid.innerHTML = `
-          <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; background: #fff; border-radius: 8px; border: 1px dashed var(--border);">
-            <p style="color: var(--muted); font-size: 1rem;">No se encontraron herramientas con los filtros actuales.</p>
-            <button class="btn-reset-focus" style="margin-top: 0.75rem;" onclick="clearProjectFocus(); setCategoryFilter('all');">Restablecer filtros</button>
-          </div>
-        `;
+        container.innerHTML = '';
+        emptyState.style.display = 'block';
         return;
       }
+      emptyState.style.display = 'none';
 
-      filtered.forEach(tool => {
-        const card = document.createElement('article');
-        card.style.cssText = "background: var(--paper); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between;";
-        const totalRoadmapItems = (tool.roadmap.shipped?.length || 0) + (tool.roadmap.now?.length || 0) + (tool.roadmap.next?.length || 0) + (tool.roadmap.later?.length || 0);
+      container.innerHTML = filtered.map((t, idx) => {
+        const shippedCount = t.roadmap.shipped?.length || 0;
+        const nowCount = t.roadmap.now?.length || 0;
+        const nextCount = t.roadmap.next?.length || 0;
+        const laterCount = t.roadmap.later?.length || 0;
+        const totalItems = shippedCount + nowCount + nextCount + laterCount;
 
-        const badgeClass = tool.status === 'prod' ? 'badge-prod' : (tool.status === 'mov' ? 'badge-mov' : 'badge-proto');
-        const badgeStyle = tool.status === 'prod' ? 'background: #dcfce7; color: var(--success);' : (tool.status === 'mov' ? 'background: #e0f2fe; color: var(--navy-light);' : 'background: #fef3c7; color: var(--warning);');
-
-        card.innerHTML = `
-          <div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-              <span style="font-family: var(--font-mono); font-size: 0.75rem; font-weight: 600; color: var(--navy-light);">[${tool.code} · ${tool.category.toUpperCase()}]</span>
-              <span style="font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.5rem; border-radius: 4px; text-transform: uppercase; ${badgeStyle}">${tool.statusText}</span>
-            </div>
-            <h2 style="font-size: 1.15rem; color: var(--navy); font-weight: 700; margin-bottom: 0.4rem; line-height: 1.3;">${tool.name}</h2>
-            <p style="font-size: 0.88rem; color: var(--text); margin-bottom: 0.75rem; line-height: 1.45;">${tool.desc}</p>
-            <div style="background: #f1f5f9; border-left: 3px solid var(--navy-light); padding: 0.5rem 0.65rem; font-size: 0.78rem; color: var(--muted); border-radius: 0 4px 4px 0; margin-bottom: 0.85rem; line-height: 1.4;">
-              <strong style="color: var(--navy); font-weight: 600;">Detonante institucional:</strong> ${tool.origin}
-            </div>
-          </div>
-          
-          <div style="border-top: 1px solid var(--border); padding-top: 0.85rem; margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.6rem;">
-            <div style="display: flex; gap: 0.5rem; align-items: center;">
-              <a href="${tool.url}" target="_blank" style="background: var(--navy); color: #fff; border-radius: 6px; padding: 0.4rem 0.8rem; text-decoration: none; font-size: 0.82rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.3rem;">Abrir solución ↗</a>
-              <button style="background: #f1f5f9; border: 1px solid var(--border-strong); color: var(--navy); border-radius: 6px; padding: 0.4rem 0.75rem; font-size: 0.82rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.3rem;" onclick="goToToolRoadmap('${tool.code}')">
-                🗺️ Roadmap (${totalRoadmapItems})
-              </button>
-            </div>
-
-            <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem;">
-              <div style="display: flex; gap: 0.35rem;">
-                <button id="like-${tool.id}" onclick="handleVote('${tool.id}', 'like')" style="background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 0.25rem 0.5rem; font-size: 0.78rem; cursor: pointer; display: inline-flex; align-items: center; gap: 0.3rem; color: var(--muted); font-weight: 600;">
-                  ❤️ <span id="count-like-${tool.id}">${tool.likes}</span>
-                </button>
-                <button id="dislike-${tool.id}" onclick="handleVote('${tool.id}', 'dislike')" style="background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 0.25rem 0.5rem; font-size: 0.78rem; cursor: pointer; display: inline-flex; align-items: center; gap: 0.3rem; color: var(--muted); font-weight: 600;">
-                  👎 <span id="count-dislike-${tool.id}">${tool.dislikes}</span>
-                </button>
+        return `
+          <article class="tool-card" onclick="openDrawerByCode('${t.code}')">
+            <div>
+              <div class="card-top">
+                <div class="card-badges">
+                  <span class="card-code">${t.code}</span>
+                  <span class="card-category cat-${t.category}">${t.category}</span>
+                </div>
+                <span class="card-status">
+                  <span class="live-dot" style="width: 6px; height: 6px;"></span>
+                  ${t.statusText}
+                </span>
               </div>
-              <div style="display: flex; gap: 0.5rem;">
-                <button onclick="openFeedback('${tool.id}', '${tool.name}', 'duda')" style="background: none; border: none; color: var(--navy-light); font-size: 0.78rem; font-weight: 500; cursor: pointer;">❓ Tengo dudas</button>
-                <button onclick="openFeedback('${tool.id}', '${tool.name}', 'obs')" style="background: none; border: none; color: var(--navy-light); font-size: 0.78rem; font-weight: 500; cursor: pointer;">💬 Observación</button>
+              <h3><a href="javascript:void(0)" onclick="openDrawerByCode('${t.code}'); event.stopPropagation();">${t.name}</a></h3>
+              <p class="card-desc">${t.desc}</p>
+            </div>
+
+            <div>
+              <div class="card-roadmap-summary">
+                <span class="summary-text">
+                  <strong>${shippedCount}</strong> entregados · <strong>${nowCount}</strong> en curso
+                </span>
+                <span style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--archive-muted);">
+                  ${totalItems} hitos
+                </span>
+              </div>
+
+              <div class="card-actions" onclick="event.stopPropagation();">
+                <button class="btn-card-explore" onclick="openDrawerByCode('${t.code}')">
+                  Explorar Ficha & Roadmap →
+                </button>
+                ${t.url ? `
+                  <a href="${t.url}" target="_blank" rel="noreferrer" class="btn-card-live" title="Abrir herramienta desplegada en producción">
+                    Probar ↗
+                  </a>
+                ` : ''}
               </div>
             </div>
-          </div>
+          </article>
         `;
-        grid.appendChild(card);
-      });
+      }).join('');
     }
 
-    window.goToToolRoadmap = function(projectCode) {
-      window.setProjectFocus(projectCode);
-      window.switchView('roadmap');
-      window.scrollTo({ top: 200, behavior: 'smooth' });
-    };
-
+    // RENDERIZADO DEL ROADMAP (KANBAN + TIMELINE)
     function renderRoadmap() {
       const filtered = getFilteredTools();
+      
+      const shipped = [];
+      const now = [];
+      const next = [];
+      const later = [];
 
-      const shippedContainer = document.getElementById('colShippedCards');
-      const nowContainer = document.getElementById('colNowCards');
-      const nextContainer = document.getElementById('colNextCards');
-      const laterContainer = document.getElementById('colLaterCards');
-
-      shippedContainer.innerHTML = '';
-      nowContainer.innerHTML = '';
-      nextContainer.innerHTML = '';
-      laterContainer.innerHTML = '';
-
-      let cShipped = 0, cNow = 0, cNext = 0, cLater = 0;
-
-      filtered.forEach(tool => {
-        (tool.roadmap.shipped || []).forEach(item => {
-          cShipped++;
-          shippedContainer.appendChild(createRoadmapCardElement(tool, item, 'shipped'));
-        });
-        (tool.roadmap.now || []).forEach(item => {
-          cNow++;
-          nowContainer.appendChild(createRoadmapCardElement(tool, item, 'now'));
-        });
-        (tool.roadmap.next || []).forEach(item => {
-          cNext++;
-          nextContainer.appendChild(createRoadmapCardElement(tool, item, 'next'));
-        });
-        (tool.roadmap.later || []).forEach(item => {
-          cLater++;
-          laterContainer.appendChild(createRoadmapCardElement(tool, item, 'later'));
-        });
+      filtered.forEach(t => {
+        (t.roadmap.shipped || []).forEach(item => shipped.push({ ...item, toolCode: t.code, toolName: t.name }));
+        (t.roadmap.now || []).forEach(item => now.push({ ...item, toolCode: t.code, toolName: t.name }));
+        (t.roadmap.next || []).forEach(item => next.push({ ...item, toolCode: t.code, toolName: t.name }));
+        (t.roadmap.later || []).forEach(item => later.push({ ...item, toolCode: t.code, toolName: t.name }));
       });
 
-      document.getElementById('countShipped').innerText = cShipped;
-      document.getElementById('countNow').innerText = cNow;
-      document.getElementById('countNext').innerText = cNext;
-      document.getElementById('countLater').innerText = cLater;
+      document.getElementById('countShipped').textContent = shipped.length;
+      document.getElementById('countNow').textContent = now.length;
+      document.getElementById('countNext').textContent = next.length;
+      document.getElementById('countLater').textContent = later.length;
+
+      const renderCards = (items) => {
+        if (!items.length) return '<p style="font-size:0.75rem; color:#94a3b8; font-style:italic; padding:0.5rem 0;">Sin hitos en esta fase</p>';
+        return items.map(item => `
+          <div class="kanban-card" onclick="openDrawerByCode('${item.toolCode}')">
+            <div class="kc-top">
+              <span class="kc-code">${item.toolCode}</span>
+              <span class="kc-tag">${item.tag || 'General'}</span>
+            </div>
+            <h4 class="kc-title">${item.title}</h4>
+            <p class="kc-desc">${item.desc}</p>
+          </div>
+        `).join('');
+      };
+
+      document.getElementById('colShippedCards').innerHTML = renderCards(shipped);
+      document.getElementById('colNowCards').innerHTML = renderCards(now);
+      document.getElementById('colNextCards').innerHTML = renderCards(next);
+      document.getElementById('colLaterCards').innerHTML = renderCards(later);
+
+      if (roadmapMode === 'timeline') {
+        renderTimeline(shipped, now, next, later);
+      }
     }
 
-    function createRoadmapCardElement(tool, item, stage) {
-      const card = document.createElement('div');
-      card.style.cssText = "background: var(--paper); border: 1px solid var(--border); border-radius: 6px; padding: 0.85rem; box-shadow: 0 1px 2px rgba(0,0,0,0.03);";
-      const impactStyle = item.impact === 'alto' ? 'background: #fee2e2; color: #991b1b;' : (item.impact === 'medio' ? 'background: #e0f2fe; color: #075985;' : 'background: #f3f4f6; color: #4b5563;');
+    function renderTimeline(shipped, now, next, later) {
+      if (!shipped) {
+        renderRoadmap();
+        return;
+      }
+      const renderTimelineCards = (items) => {
+        if (!items.length) return '<p style="font-size:0.78rem; color:#94a3b8; font-style:italic;">Sin hitos</p>';
+        return items.map(i => `
+          <div class="kanban-card" onclick="openDrawerByCode('${i.toolCode}')">
+            <div class="kc-top">
+              <span class="kc-code">${i.toolCode} · ${i.toolName}</span>
+              <span class="kc-tag">${i.tag}</span>
+            </div>
+            <h4 class="kc-title">${i.title}</h4>
+            <p class="kc-desc">${i.desc}</p>
+          </div>
+        `).join('');
+      };
 
-      card.innerHTML = `
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.35rem;">
-          <span style="font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700; color: var(--navy-light);">[${tool.code} · ${tool.name}]</span>
-          ${item.impact ? `<span style="font-size: 0.65rem; font-weight: 700; padding: 0.15rem 0.35rem; border-radius: 3px; text-transform: uppercase; ${impactStyle}">${item.impact}</span>` : ''}
-        </div>
-        <h4 style="font-size: 0.9rem; font-weight: 700; color: var(--navy); line-height: 1.3; margin-bottom: 0.35rem;">${item.title}</h4>
-        ${item.desc ? `<p style="font-size: 0.8rem; color: var(--muted); line-height: 1.4; margin-bottom: 0.5rem;">${item.desc}</p>` : ''}
-        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.72rem; padding-top: 0.4rem; border-top: 1px dashed var(--border); color: var(--muted);">
-          <span>${item.tag ? '🏷️ ' + item.tag : tool.category}</span>
-          <button onclick="setProjectFocus('${tool.code}')" style="background: none; border: none; color: var(--navy-light); cursor: pointer; font-weight: 600; font-family: var(--font-mono);" title="Filtrar solo este producto">
-            Aislar ${tool.code} →
-          </button>
-        </div>
-      `;
-      return card;
+      document.getElementById('timelineShippedItems').innerHTML = renderTimelineCards(shipped);
+      document.getElementById('timelineNowItems').innerHTML = renderTimelineCards(now);
+      document.getElementById('timelineNextItems').innerHTML = renderTimelineCards(next);
+      document.getElementById('timelineLaterItems').innerHTML = renderTimelineCards(later);
     }
 
-    window.handleVote = function(id, type) {
-      const tool = toolsData.find(t => t.id === id);
-      if (!tool) return;
-      if (type === 'like') {
-        tool.likes++;
-        document.getElementById(`count-like-${id}`).innerText = tool.likes;
+    // SLIDE-OVER DRAWER LOGIC
+    function openDrawerByCode(code) {
+      const idx = toolsData.findIndex(t => t.code === code);
+      if (idx !== -1) {
+        activeDrawerIndex = idx;
+        populateDrawer(toolsData[idx]);
+        document.getElementById('drawerBackdrop').classList.add('active');
+        document.getElementById('slideDrawer').classList.add('active');
+        document.getElementById('slideDrawer').setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    function closeDrawer() {
+      document.getElementById('drawerBackdrop').classList.remove('active');
+      document.getElementById('slideDrawer').classList.remove('active');
+      document.getElementById('slideDrawer').setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      activeDrawerIndex = -1;
+    }
+
+    function navigateDrawer(step) {
+      const newIdx = activeDrawerIndex + step;
+      if (newIdx >= 0 && newIdx < toolsData.length) {
+        activeDrawerIndex = newIdx;
+        populateDrawer(toolsData[newIdx]);
+      }
+    }
+
+    function populateDrawer(tool) {
+      document.getElementById('drawerCode').textContent = tool.code;
+      document.getElementById('drawerCategory').textContent = tool.category.toUpperCase();
+      document.getElementById('drawerStatus').textContent = `● ${tool.statusText}`;
+      document.getElementById('drawerTitle').textContent = tool.name;
+      document.getElementById('drawerDesc').textContent = tool.desc;
+      document.getElementById('drawerOrigin').textContent = tool.origin;
+
+      const liveBtn = document.getElementById('drawerLiveBtn');
+      if (tool.url) {
+        liveBtn.href = tool.url;
+        liveBtn.style.display = 'inline-flex';
       } else {
-        tool.dislikes++;
-        document.getElementById(`count-dislike-${id}`).innerText = tool.dislikes;
+        liveBtn.style.display = 'none';
       }
-      if (window.umami) {
-        window.umami.track('catalogo_voto', { herramienta: id, codigo: tool.code, tipo: type });
-      }
-    };
 
-    window.openFeedback = function(id, name, type) {
-      document.getElementById('modalToolId').value = id;
+      const totalHitos = (tool.roadmap.shipped?.length || 0) + (tool.roadmap.now?.length || 0) + (tool.roadmap.next?.length || 0) + (tool.roadmap.later?.length || 0);
+      document.getElementById('drawerRoadmapCount').textContent = `${totalHitos} hitos documentados`;
+      document.getElementById('drawerNavInfo').textContent = `${activeDrawerIndex + 1} / ${toolsData.length}`;
+
+      document.getElementById('drawerPrevBtn').disabled = activeDrawerIndex === 0;
+      document.getElementById('drawerNextBtn').disabled = activeDrawerIndex === toolsData.length - 1;
+
+      renderDrawerRoadmapTab(tool, activeDrawerTab);
+    }
+
+    function switchDrawerRoadmapTab(tab) {
+      activeDrawerTab = tab;
+      document.querySelectorAll('.dr-tab').forEach(b => {
+        b.classList.toggle('active', b.dataset.drtab === tab);
+      });
+      if (activeDrawerIndex !== -1) {
+        renderDrawerRoadmapTab(toolsData[activeDrawerIndex], tab);
+      }
+    }
+
+    function renderDrawerRoadmapTab(tool, tab) {
+      const items = tool.roadmap[tab] || [];
+      const list = document.getElementById('drawerRoadmapList');
+      if (!items.length) {
+        list.innerHTML = `<p style="font-size: 0.8rem; color: #94a3b8; font-style: italic; padding: 0.75rem 0;">No hay hitos registrados en este estado.</p>`;
+        return;
+      }
+      list.innerHTML = items.map(i => `
+        <div class="drawer-item-card">
+          <div class="drawer-item-top">
+            <span class="drawer-item-title">${i.title}</span>
+            <span class="kc-tag">${i.tag || 'General'}</span>
+          </div>
+          <p class="drawer-item-desc">${i.desc}</p>
+        </div>
+      `).join('');
+    }
+
+    function openFeedbackFromDrawer() {
+      if (activeDrawerIndex !== -1) {
+        const tool = toolsData[activeDrawerIndex];
+        openModal(tool.id, 'consulta');
+      }
+    }
+
+    // MODAL DE FEEDBACK
+    function openModal(toolId, type) {
+      document.getElementById('modalToolId').value = toolId;
       document.getElementById('modalFeedbackType').value = type;
-      document.getElementById('modalTitle').innerText = (type === 'duda' ? '❓ Pregunta técnica sobre ' : '💬 Observación sobre ') + name;
-      document.getElementById('modalInputLabel').innerText = (type === 'duda' ? '¿Cuál es tu duda metodológica, normativa o técnica?' : '¿Qué caso de borde o mejora propones?');
-      document.getElementById('feedbackModal').classList.add('active');
-    };
+      const tool = toolsData.find(t => t.id === toolId);
+      document.getElementById('modalTitle').textContent = `Consulta sobre ${tool ? tool.name : 'Herramienta'}`;
+      document.getElementById('feedbackModal').style.display = 'flex';
+    }
 
-    window.closeModal = function() {
-      document.getElementById('feedbackModal').classList.remove('active');
-    };
+    function closeModal() {
+      document.getElementById('feedbackModal').style.display = 'none';
+      document.getElementById('modalText').value = '';
+    }
 
-    window.handleFeedbackSubmit = function(e) {
+    function handleFeedbackSubmit(e) {
       e.preventDefault();
-      const toolId = document.getElementById('modalToolId').value;
-      const type = document.getElementById('modalFeedbackType').value;
-      const email = document.getElementById('modalEmail').value;
-      alert(`¡Gracias! Tu ${type === 'duda' ? 'consulta' : 'observación'} sobre "${toolId}" fue registrada para respuesta directa a ${email}.`);
-      window.closeModal();
-    };
+      alert('¡Gracias por tu observación! Tu consulta ha sido registrada.');
+      closeModal();
+    }
 
-    window.handleBuzonSubmit = function(e) {
+    function handleProposalSubmit(e) {
       e.preventDefault();
-      const correo = document.getElementById('correo').value;
-      alert(`¡Requerimiento recibido en el Buzón de Ideas! Nos pondremos en contacto con ${correo}.`);
+      const nombre = document.getElementById('propNombre').value;
+      const desc = document.getElementById('propDescripcion').value;
+      alert(`¡Gracias ${nombre}! Tu propuesta ha sido recibida.`);
       e.target.reset();
-    };
+    }
 
-    window.addEventListener('DOMContentLoaded', () => {
-      initFromUrl();
-    });
+    // ATAJOS DE TECLADO (Esc, Flechas)
+    function setupKeyboardShortcuts() {
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          closeDrawer();
+          closeModal();
+        } else if (document.getElementById('slideDrawer').classList.contains('active')) {
+          if (e.key === 'ArrowRight' || e.key === 'j') {
+            navigateDrawer(1);
+          } else if (e.key === 'ArrowLeft' || e.key === 'k') {
+            navigateDrawer(-1);
+          }
+        }
+      });
+    }
   </script>
 </Layout>

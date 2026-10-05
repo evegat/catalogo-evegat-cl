@@ -59,7 +59,7 @@ const totalRoadmapItems = filteredTools.reduce((acc, t) => {
 }, 0);
 ---
 
-<Layout title={title} description={description}>
+<Layout title={title} description={description} keywords={keywords}>
   <!-- Schema.org SEO Structured Data (JSON-LD) -->
   <script type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org",
@@ -78,808 +78,680 @@ const totalRoadmapItems = filteredTools.reduce((acc, t) => {
       "operatingSystem": "Web",
       "applicationCategory": "GovernmentApplication",
       "description": t.desc,
-      "url": t.url
+      "url": t.url || `https://catalogo.evegat.cl/?p=${t.code}`
     }))
   })} />
 
-  <!-- Breadcrumbs & SEO Hero -->
-  <header class="site-header">
-    <nav class="breadcrumb-nav">
-      <a href="/" class="breadcrumb-link">← Catálogo General</a>
-      <span class="breadcrumb-sep">/</span>
-      <span class="breadcrumb-current">{categoryName}</span>
-    </nav>
-
-    <div class="header-top">
-      <div>
-        <div class="kicker">[SECTOR · {category.toUpperCase()}] · Eduardo Vega Toledo</div>
-        <h1>{categoryName}</h1>
-        <p class="lead">{description}</p>
-      </div>
-    </div>
-
-    <!-- Pestañas de Vista -->
-    <div class="view-switcher">
-      <button class="view-btn active" id="tabBtnCatalog" onclick="switchView('catalog')">
-        📦 Soluciones {categoryName} ({categoryCount})
-      </button>
-      <button class="view-btn" id="tabBtnRoadmap" onclick="switchView('roadmap')">
-        🗺️ Roadmap Específico ({totalRoadmapItems})
-      </button>
+  <!-- Barra de Navegación Institucional evegat.cl -->
+  <header class="top-nav-shell">
+    <div class="top-nav-inner">
+      <a href="https://evegat.cl" class="brand-block">
+        <span class="brand-mark">EVT</span>
+        <div class="brand-text">
+          <strong>Eduardo Vega Toledo</strong>
+          <small>Gestión pública · evidencia · tecnología</small>
+        </div>
+      </a>
+      <nav class="nav-links" aria-label="Navegación del sitio">
+        <a href="https://catalogo.evegat.cl">← Catálogo General</a>
+        <a href="https://evegat.cl/servicios/">Servicios</a>
+        <a href="https://evegat.cl/contacto/">Contacto</a>
+        <a href="https://evegat.cl" class="btn-back-portafolio">Portafolio Principal</a>
+      </nav>
     </div>
   </header>
 
-  <!-- Barra de Filtros Rápidos hacia otros sectores -->
-  <section class="controls-bar">
-    <div class="filter-group">
-      <a href="/" class="filter-btn">Ver Todos ({totalTools})</a>
-      <a href="/govtech" class={`filter-btn ${category === 'govtech' ? 'active' : ''}`}>GovTech</a>
-      <a href="/civiltech" class={`filter-btn ${category === 'civiltech' ? 'active' : ''}`}>CivilTech</a>
-      <a href="/docencia" class={`filter-btn ${category === 'docencia' ? 'active' : ''}`}>Docencia e IA</a>
-      <a href="/datos" class={`filter-btn ${category === 'datos' ? 'active' : ''}`}>Datos Abiertos</a>
-    </div>
+  <!-- Hero de Categoría SEO -->
+  <section class="hero-shell">
+    <div class="hero-inner">
+      <nav class="category-breadcrumbs" aria-label="Miga de pan">
+        <a href="https://catalogo.evegat.cl">Catálogo</a>
+        <span class="bread-sep">/</span>
+        <span class="bread-current">{categoryName}</span>
+      </nav>
+      <h1>{categoryName}</h1>
+      <p class="hero-lead">{description}</p>
 
-    <div class="search-box">
-      <span class="search-icon">🔍</span>
-      <input type="text" class="search-input" id="searchInput" placeholder={`Buscar dentro de ${categoryName}...`} oninput="handleSearch(this.value)">
+      <div class="trust-bar">
+        <div class="trust-item">
+          <span class="live-dot" aria-hidden="true"></span>
+          <strong>{categoryCount}</strong> herramientas operativas
+        </div>
+        <span class="trust-sep">·</span>
+        <div class="trust-item">
+          <strong>{totalRoadmapItems}</strong> hitos de hoja de ruta
+        </div>
+        <span class="trust-sep">·</span>
+        <div class="trust-item">
+          <strong>100%</strong> código auditable y verificado
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- Banner de Foco en Proyecto Específico (Deep Linking) -->
-  <div id="projectFocusBanner" class="project-focus-banner" style="display: none;">
-    <div>
-      <strong>Filtrando por proyecto:</strong> <span id="projectFocusLabel" class="font-mono">P090</span>
+  <!-- Contenedor Principal de la Categoría -->
+  <div class="app-shell">
+    <div class="category-switch-bar">
+      <span class="cs-label">Otras colecciones:</span>
+      <div class="cs-links">
+        <a href="/govtech" class:list={[{ active: category === 'govtech' }]}>GovTech</a>
+        <a href="/civiltech" class:list={[{ active: category === 'civiltech' }]}>CivilTech</a>
+        <a href="/docencia" class:list={[{ active: category === 'docencia' }]}>Docencia e IA</a>
+        <a href="/datos" class:list={[{ active: category === 'datos' }]}>Datos & Finanzas</a>
+        <a href="/" class="cs-all">Ver todo el catálogo (15) →</a>
+      </div>
     </div>
-    <button class="btn-reset-focus" onclick="clearProjectFocus()">Ver todo el sector ✕</button>
+
+    <!-- Grid de Herramientas de la Categoría -->
+    <main class="catalog-view">
+      <div class="tools-grid">
+        {filteredTools.map(t => {
+          const shippedCount = t.roadmap.shipped?.length || 0;
+          const nowCount = t.roadmap.now?.length || 0;
+          const nextCount = t.roadmap.next?.length || 0;
+          const laterCount = t.roadmap.later?.length || 0;
+          const totalItems = shippedCount + nowCount + nextCount + laterCount;
+
+          return (
+            <article class="tool-card" onclick={`openDrawerByCode('${t.code}')`}>
+              <div>
+                <div class="card-top">
+                  <div class="card-badges">
+                    <span class="card-code">{t.code}</span>
+                    <span class={`card-category cat-${t.category}`}>{t.category}</span>
+                  </div>
+                  <span class="card-status">
+                    <span class="live-dot" style="width: 6px; height: 6px;"></span>
+                    {t.statusText}
+                  </span>
+                </div>
+                <h3><a href="javascript:void(0)" onclick={`openDrawerByCode('${t.code}'); event.stopPropagation();`}>{t.name}</a></h3>
+                <p class="card-desc">{t.desc}</p>
+              </div>
+
+              <div>
+                <div class="card-roadmap-summary">
+                  <span class="summary-text">
+                    <strong>{shippedCount}</strong> entregados · <strong>{nowCount}</strong> en curso
+                  </span>
+                  <span style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--archive-muted);">
+                    {totalItems} hitos
+                  </span>
+                </div>
+
+                <div class="card-actions" onclick="event.stopPropagation();">
+                  <button class="btn-card-explore" onclick={`openDrawerByCode('${t.code}')`}>
+                    Explorar Ficha & Roadmap →
+                  </button>
+                  {t.url && (
+                    <a href={t.url} target="_blank" rel="noreferrer" class="btn-card-live" title="Abrir herramienta desplegada en producción">
+                      Probar ↗
+                    </a>
+                  )}
+                </div>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </main>
+
+    <!-- Sección de Enlace al Portafolio Completo -->
+    <section class="cat-cta-section">
+      <div class="cat-cta-card">
+        <h3>¿Quieres explorar la hoja de ruta general?</h3>
+        <p>Revisa el tablero Kanban unificado con los 42 hitos de todo el ecosistema MyWorld.</p>
+        <a href="/?view=roadmap" class="btn-cat-roadmap">Ver Roadmap Completo →</a>
+      </div>
+    </section>
   </div>
 
-  <!-- VISTA 1: CATÁLOGO DEL SECTOR -->
-  <main id="catalogView">
-    <div class="grid" id="toolsGrid"></div>
-  </main>
-
-  <!-- VISTA 2: ROADMAP DEL SECTOR -->
-  <section id="roadmapView" class="roadmap-view" style="display: none;">
-    <div class="roadmap-header">
-      <div class="roadmap-header-text">
-        <h2>Hoja de Ruta del Sector {categoryName}</h2>
-        <p>Hitos de desarrollo clasificados en Ahora (Now), Próximo (Next) y En Estudio (Later).</p>
+  <!-- SLIDE-OVER DRAWER -->
+  <div class="drawer-backdrop" id="drawerBackdrop" onclick="closeDrawer()"></div>
+  <aside class="slide-drawer" id="slideDrawer" aria-hidden="true">
+    <div class="drawer-header">
+      <div class="drawer-header-top">
+        <div class="drawer-meta-badges">
+          <span class="drawer-code font-mono" id="drawerCode">P087</span>
+          <span class="drawer-category-badge" id="drawerCategory">GovTech</span>
+          <span class="drawer-status-badge" id="drawerStatus">● En producción</span>
+        </div>
+        <button class="drawer-close-btn" onclick="closeDrawer()" aria-label="Cerrar panel">&times;</button>
       </div>
-      <div>
-        <select id="projectSelector" class="roadmap-project-select" onchange="handleProjectSelect(this.value)">
-          <option value="all">Ver todas las herramientas del sector</option>
-          {filteredTools.map(t => (
-            <option value={t.code}>{t.code} · {t.name}</option>
-          ))}
-        </select>
+      <h2 class="drawer-title" id="drawerTitle">Nombre de la Herramienta</h2>
+      <p class="drawer-desc" id="drawerDesc">Descripción de la herramienta...</p>
+      
+      <div class="drawer-cta-bar">
+        <a href="#" target="_blank" rel="noreferrer" class="drawer-btn-primary" id="drawerLiveBtn">
+          Probar Herramienta en Vivo ↗
+        </a>
       </div>
     </div>
 
-    <div class="kanban-grid">
-      <div class="kanban-col col-shipped">
-        <div class="col-header">
-          <span class="col-title">✓ Entregado</span>
-          <span class="col-count" id="countShipped">0</span>
-        </div>
-        <div class="kanban-cards" id="colShippedCards"></div>
+    <div class="drawer-body">
+      <div class="drawer-section">
+        <h3 class="drawer-section-title">El Problema Público / Origen</h3>
+        <p class="drawer-origin-text" id="drawerOrigin">Detalles del origen...</p>
       </div>
 
-      <div class="kanban-col col-now">
-        <div class="col-header">
-          <span class="col-title">● En Curso (Now)</span>
-          <span class="col-count" id="countNow">0</span>
+      <div class="drawer-section">
+        <div class="drawer-section-head">
+          <h3 class="drawer-section-title">Hoja de Ruta del Proyecto</h3>
+          <span class="drawer-roadmap-count font-mono" id="drawerRoadmapCount">4 hitos</span>
         </div>
-        <div class="kanban-cards" id="colNowCards"></div>
+        <div class="drawer-roadmap-tabs">
+          <button class="dr-tab active" data-drtab="shipped" onclick="switchDrawerRoadmapTab('shipped')">Entregado</button>
+          <button class="dr-tab" data-drtab="now" onclick="switchDrawerRoadmapTab('now')">En Curso</button>
+          <button class="dr-tab" data-drtab="next" onclick="switchDrawerRoadmapTab('next')">Próximo</button>
+          <button class="dr-tab" data-drtab="later" onclick="switchDrawerRoadmapTab('later')">En Estudio</button>
+        </div>
+        <div class="drawer-roadmap-list" id="drawerRoadmapList"></div>
       </div>
 
-      <div class="kanban-col col-next">
-        <div class="col-header">
-          <span class="col-title">○ Próximo (Next)</span>
-          <span class="col-count" id="countNext">0</span>
-        </div>
-        <div class="kanban-cards" id="colNextCards"></div>
-      </div>
-
-      <div class="kanban-col col-later">
-        <div class="col-header">
-          <span class="col-title">◌ En Estudio (Later)</span>
-          <span class="col-count" id="countLater">0</span>
-        </div>
-        <div class="kanban-cards" id="colLaterCards"></div>
+      <div class="drawer-section drawer-b2g-box">
+        <h4 class="b2g-box-title">Consultoría & Acompañamiento Técnico</h4>
+        <p class="b2g-box-text">Adecuación normativa, diagnóstico de brechas y desarrollo a la medida para órganos del Estado.</p>
+        <a href="https://evegat.cl/contacto/" target="_blank" class="b2g-box-link">Contactar a Eduardo Vega →</a>
       </div>
     </div>
-  </section>
+  </aside>
 
-  <!-- Buzón de Ideas Especializado para el sector -->
-  <section class="buzon-section">
-    <h2>📬 ¿Falta una herramienta pública en este sector?</h2>
-    <p>Cuéntame qué dolor, trámite o base de datos cuesta procesar en tu institución y podemos evaluar su desarrollo o alianza técnica.</p>
-    
-    <form class="buzon-form" onsubmit="handleBuzonSubmit(event)">
-      <input type="hidden" id="buzonSector" value={category} />
-      <div class="form-group">
-        <label for="tipo">Tipo de requerimiento:</label>
-        <select id="tipo" required>
-          <option value="pedido">💡 Pídeme construir una herramienta para {categoryName}</option>
-          <option value="alianza">🤝 Alianza institucional o consultoría B2G</option>
-          <option value="mejora">⚡ Sugerencia de mejora al roadmap de este sector</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="nombre">Nombre y Organización:</label>
-        <input type="text" id="nombre" placeholder="Ej. Camila González, Municipalidad de Santiago" required>
-      </div>
-
-      <div class="form-group">
-        <label for="correo">Correo institucional:</label>
-        <input type="email" id="correo" placeholder="tu-correo@institucion.cl" required>
-      </div>
-
-      <div class="form-group">
-        <label for="descripcion">Problema o propuesta:</label>
-        <textarea id="descripcion" rows="4" placeholder="Describe el cuello de botella que enfrentas..." required></textarea>
-      </div>
-
-      <button type="submit" class="btn-submit">Enviar Requerimiento →</button>
-    </form>
-  </section>
-
-  <!-- Modal para Dudas y Observaciones -->
-  <div class="modal-overlay" id="feedbackModal">
-    <div class="modal-box">
-      <div class="modal-header">
-        <h3 id="modalTitle">Aportar sobre Herramienta</h3>
-        <button class="modal-close" onclick="closeModal()">&times;</button>
-      </div>
-      <form onsubmit="handleFeedbackSubmit(event)">
-        <input type="hidden" id="modalToolId">
-        <input type="hidden" id="modalFeedbackType">
-        <div class="form-group" style="margin-bottom: 0.85rem;">
-          <label id="modalInputLabel">Tu consulta u observación técnica:</label>
-          <textarea id="modalText" rows="4" required style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 6px;"></textarea>
+  <!-- FOOTER INSTITUCIONAL -->
+  <footer class="site-footer">
+    <div class="footer-shell">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <strong>Eduardo Vega Toledo</strong>
+          <p>Políticas públicas, datos territoriales y tecnología con responsabilidad institucional.</p>
+          <p class="footer-social">
+            <a href="mailto:eduardo@evegat.cl">eduardo@evegat.cl</a> · 
+            <a href="https://www.linkedin.com/in/evegat1989/" target="_blank" rel="noreferrer">LinkedIn</a>
+          </p>
         </div>
-        <div class="form-group" style="margin-bottom: 1rem;">
-          <label>Tu correo institucional:</label>
-          <input type="email" id="modalEmail" required style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 6px;">
+        <nav class="footer-nav">
+          <a href="https://catalogo.evegat.cl">Catálogo Principal</a>
+          <a href="https://evegat.cl">Portafolio evegat.cl</a>
+          <a href="https://evegat.cl/servicios/">Servicios</a>
+        </nav>
+        <div class="footer-meta">
+          <p>© {new Date().getFullYear()} Eduardo Vega Toledo</p>
+          <p>Santiago, Chile</p>
         </div>
-        <button type="submit" class="btn-submit" style="width: 100%;">Enviar Mensaje</button>
-      </form>
+      </div>
     </div>
-  </div>
+  </footer>
 
+  <!-- ESTILOS CANÓNICOS -->
   <style>
-    .breadcrumb-nav {
-      font-size: 0.82rem;
-      margin-bottom: 0.75rem;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
+    .top-nav-shell {
+      background: var(--archive-navy);
+      border-bottom: 1px solid #245486;
+      color: #edf4fb;
+      padding: 0.75rem 1.5rem;
     }
-    .breadcrumb-link {
-      color: var(--navy-light);
-      text-decoration: none;
-      font-weight: 600;
-    }
-    .breadcrumb-link:hover { text-decoration: underline; }
-    .breadcrumb-sep { color: var(--muted); }
-    .breadcrumb-current { color: var(--muted); font-weight: 500; }
-
-    .site-header {
-      max-width: 1200px;
-      margin: 2rem auto 1.5rem auto;
-      border-bottom: 2px solid var(--navy);
-      padding-bottom: 1.5rem;
-    }
-    .header-top {
+    .top-nav-inner {
+      max-width: 1280px;
+      margin: 0 auto;
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
+      align-items: center;
       flex-wrap: wrap;
       gap: 1rem;
     }
-    .kicker {
-      font-family: var(--font-mono);
-      font-size: 0.8rem;
-      color: var(--navy-light);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 0.35rem;
+    .brand-block {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: #edf4fb;
     }
-    h1 {
-      font-size: 2.1rem;
-      color: var(--navy);
-      font-weight: 800;
-      letter-spacing: -0.025em;
+    .brand-mark {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      color: var(--archive-mint-accent);
+      border: 2px solid #edf4fb;
+      font-weight: 850;
+      font-size: 0.92rem;
+      letter-spacing: 0.04em;
+      font-family: var(--font-mono);
+      background: var(--archive-navy-deep);
+    }
+    .brand-text strong {
+      display: block;
+      color: #fff;
+      font-size: 0.95rem;
       line-height: 1.2;
     }
-    .lead {
-      color: var(--muted);
-      font-size: 1.05rem;
-      margin-top: 0.6rem;
-      max-width: 860px;
-    }
-
-    .view-switcher {
-      display: flex;
-      gap: 0.5rem;
-      margin-top: 1.25rem;
-      background: #e2e8f0;
-      padding: 4px;
-      border-radius: 8px;
-      width: fit-content;
-    }
-    .view-btn {
-      background: transparent;
-      border: none;
-      padding: 0.5rem 1.15rem;
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--muted);
-      cursor: pointer;
-      border-radius: 6px;
-      transition: all 0.15s ease;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-    .view-btn.active {
-      background: var(--paper);
-      color: var(--navy);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-    }
-
-    .controls-bar {
-      max-width: 1200px;
-      margin: 0 auto 1.5rem auto;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.75rem 0;
-    }
-    .filter-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.4rem;
-      align-items: center;
-    }
-    .filter-btn {
-      background: var(--paper);
-      border: 1px solid var(--border);
-      padding: 0.4rem 0.85rem;
-      border-radius: 999px;
-      font-size: 0.82rem;
-      font-weight: 500;
-      color: var(--muted);
-      text-decoration: none;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-    .filter-btn:hover {
-      border-color: var(--navy-light);
-      color: var(--navy);
-    }
-    .filter-btn.active {
-      background: var(--navy);
-      color: #fff;
-      border-color: var(--navy);
-    }
-
-    .search-box {
-      position: relative;
-      min-width: 260px;
-    }
-    .search-input {
-      width: 100%;
-      padding: 0.45rem 0.85rem 0.45rem 2rem;
-      border: 1px solid var(--border-strong);
-      border-radius: 6px;
-      font-size: 0.85rem;
-      font-family: var(--font-sans);
-      background: var(--paper);
-    }
-    .search-icon {
-      position: absolute;
-      left: 0.65rem;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--muted);
-      font-size: 0.85rem;
-    }
-
-    .project-focus-banner {
-      max-width: 1200px;
-      margin: 0 auto 1.25rem auto;
-      background: #eff6ff;
-      border: 1px solid #bfdbfe;
-      border-left: 4px solid var(--navy-light);
-      padding: 0.75rem 1rem;
-      border-radius: 6px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.88rem;
-    }
-    .btn-reset-focus {
-      background: #ffffff;
-      border: 1px solid #bfdbfe;
-      color: var(--navy-light);
-      font-size: 0.8rem;
-      font-weight: 600;
-      padding: 0.3rem 0.6rem;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    .grid {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-      gap: 1.25rem;
-    }
-
-    .roadmap-view {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    .roadmap-header {
-      background: var(--paper);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.25rem;
-      margin-bottom: 1.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-    .roadmap-header-text h2 {
-      font-size: 1.35rem;
-      color: var(--navy);
-      font-weight: 700;
-      margin-bottom: 0.25rem;
-    }
-    .roadmap-header-text p {
-      font-size: 0.88rem;
-      color: var(--muted);
-    }
-    .roadmap-project-select {
-      padding: 0.45rem 0.75rem;
-      border: 1px solid var(--border-strong);
-      border-radius: 6px;
-      font-size: 0.85rem;
-      font-family: var(--font-sans);
-      background: #ffffff;
-      color: var(--navy);
-      font-weight: 600;
-    }
-
-    .kanban-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1.25rem;
-      align-items: start;
-    }
-    @media (max-width: 1024px) {
-      .kanban-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 640px) {
-      .kanban-grid { grid-template-columns: 1fr; }
-    }
-
-    .kanban-col {
-      background: #f1f5f9;
-      border-radius: var(--radius);
-      padding: 0.9rem;
-      border: 1px solid var(--border);
-    }
-    .col-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.85rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 2px solid var(--border-strong);
-    }
-    .col-title {
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: var(--navy);
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
-    }
-    .col-count {
-      background: #ffffff;
-      border: 1px solid var(--border);
-      padding: 0.15rem 0.45rem;
-      border-radius: 999px;
-      font-size: 0.75rem;
+    .brand-text small {
+      color: var(--archive-mint-accent);
       font-family: var(--font-mono);
-      font-weight: 700;
-      color: var(--muted);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
-
-    .col-shipped { border-top: 3px solid #10b981; }
-    .col-now { border-top: 3px solid var(--navy); }
-    .col-next { border-top: 3px solid #0284c7; }
-    .col-later { border-top: 3px solid #94a3b8; }
-
-    .kanban-cards {
+    .nav-links {
       display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
+      align-items: center;
+      gap: 1.25rem;
+    }
+    .nav-links a {
+      color: #c7d7e8;
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+    .btn-back-portafolio {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      padding: 0.35rem 0.75rem;
+      border-radius: var(--radius-sm);
+      color: #ffffff !important;
     }
 
-    .buzon-section {
-      max-width: 1200px;
-      margin: 4rem auto 0 auto;
-      background: #ffffff;
-      border: 2px dashed var(--border-strong);
-      border-radius: var(--radius);
-      padding: 2.5rem 1.5rem;
-      text-align: center;
+    .hero-shell {
+      background: var(--archive-paper);
+      padding: 3rem 1.5rem 2rem 1.5rem;
+      border-bottom: 1px solid var(--archive-line);
     }
-    .buzon-section h2 {
-      color: var(--navy);
-      font-size: 1.65rem;
-      font-weight: 800;
-      margin-bottom: 0.4rem;
-    }
-    .buzon-section p {
-      color: var(--muted);
-      max-width: 650px;
-      margin: 0 auto 1.5rem auto;
-      font-size: 0.95rem;
-    }
-    .buzon-form {
-      max-width: 620px;
+    .hero-inner {
+      max-width: 1280px;
       margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      gap: 0.85rem;
-      text-align: left;
     }
-    .form-group label {
-      display: block;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--navy);
-      margin-bottom: 0.25rem;
+    .category-breadcrumbs {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--archive-muted);
+      margin-bottom: 0.75rem;
     }
-    .form-group input, .form-group textarea, .form-group select {
-      width: 100%;
-      padding: 0.55rem 0.75rem;
-      border: 1px solid var(--border-strong);
-      border-radius: 6px;
-      font-family: var(--font-sans);
-      font-size: 0.9rem;
+    .category-breadcrumbs a {
+      color: var(--archive-blue);
+      text-decoration: none;
     }
-    .btn-submit {
-      background: var(--navy);
-      color: #fff;
-      border: none;
-      padding: 0.65rem 1.25rem;
-      border-radius: 6px;
-      font-weight: 600;
-      cursor: pointer;
-      font-size: 0.92rem;
-      align-self: flex-start;
-      transition: background 0.15s ease;
+    .bread-sep {
+      margin: 0 6px;
+      color: var(--archive-line-strong);
     }
-    .btn-submit:hover { background: var(--navy-light); }
-
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.65);
-      backdrop-filter: blur(2px);
-      z-index: 100;
-      align-items: center;
-      justify-content: center;
-      padding: 1rem;
+    .bread-current {
+      color: var(--archive-navy);
+      font-weight: 700;
     }
-    .modal-overlay.active { display: flex; }
-    .modal-box {
-      background: #fff;
-      max-width: 500px;
-      width: 100%;
-      border-radius: var(--radius);
-      padding: 1.5rem;
-      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.15);
-    }
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    h1 {
+      font-size: clamp(2.3rem, 3.8vw, 3.4rem);
+      line-height: 1.05;
+      color: var(--archive-ink);
+      max-width: 980px;
       margin-bottom: 1rem;
     }
-    .modal-header h3 { font-size: 1.15rem; color: var(--navy); font-weight: 700; }
-    .modal-close {
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      cursor: pointer;
-      color: var(--muted);
+    .hero-lead {
+      max-width: 860px;
+      font-size: 1.05rem;
+      line-height: 1.6;
+      color: var(--archive-muted);
+      margin-bottom: 1.75rem;
     }
+    .trust-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.6rem 1.25rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid rgba(29, 77, 145, 0.18);
+      font-size: 0.85rem;
+      color: var(--archive-muted);
+    }
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .trust-item strong {
+      color: var(--archive-ink);
+      font-weight: 750;
+    }
+    .trust-sep {
+      color: rgba(29, 77, 145, 0.35);
+    }
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--archive-mint);
+      display: inline-block;
+      box-shadow: 0 0 0 2px rgba(84, 185, 149, 0.25);
+    }
+
+    .app-shell {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 1.75rem 1.5rem 4rem 1.5rem;
+      flex: 1;
+      width: 100%;
+    }
+    .category-switch-bar {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--archive-line);
+    }
+    .cs-label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--archive-navy);
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+    }
+    .cs-links {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .cs-links a {
+      background: #ffffff;
+      border: 1px solid var(--archive-line);
+      padding: 0.35rem 0.85rem;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      color: var(--archive-muted);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .cs-links a.active {
+      background: var(--archive-navy);
+      color: #fff;
+      border-color: var(--archive-navy);
+    }
+    .cs-all {
+      color: var(--archive-blue) !important;
+      border-color: rgba(11, 74, 162, 0.3) !important;
+    }
+
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 1.5rem;
+    }
+    .tool-card {
+      background: var(--archive-surface);
+      border: 1px solid var(--archive-line);
+      border-radius: var(--radius-md);
+      padding: 1.4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 1px 2px rgba(16, 21, 28, 0.04);
+      cursor: pointer;
+    }
+    .tool-card:hover {
+      border-color: var(--archive-line-strong);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(6, 35, 74, 0.08);
+    }
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+    .card-badges {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .card-code {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 750;
+      color: var(--archive-navy);
+      background: #eef4fb;
+      padding: 2px 6px;
+      border-radius: 3px;
+      border: 1px solid rgba(11, 74, 162, 0.2);
+    }
+    .card-category {
+      font-size: 0.7rem;
+      font-weight: 650;
+      padding: 2px 7px;
+      border-radius: 3px;
+      text-transform: uppercase;
+    }
+    .cat-govtech { background: #e0f2fe; color: #0369a1; }
+    .cat-civiltech { background: #dcfce7; color: #15803d; }
+    .cat-docencia { background: #fef3c7; color: #b45309; }
+    .cat-datos { background: #f1f5f9; color: #475569; }
+
+    .card-status {
+      font-size: 0.72rem;
+      font-weight: 650;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: var(--archive-mint);
+    }
+    .tool-card h3 {
+      font-size: 1.25rem;
+      line-height: 1.25;
+      margin-bottom: 0.6rem;
+    }
+    .tool-card h3 a {
+      color: var(--archive-ink);
+      text-decoration: none;
+    }
+    .card-desc {
+      color: var(--archive-muted);
+      font-size: 0.85rem;
+      line-height: 1.5;
+      margin-bottom: 1.25rem;
+    }
+    .card-roadmap-summary {
+      background: #faf8f5;
+      border: 1px solid #ebd9c8;
+      border-radius: var(--radius-sm);
+      padding: 0.6rem 0.8rem;
+      margin-bottom: 1.15rem;
+      font-size: 0.75rem;
+      color: var(--archive-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .card-actions {
+      display: flex;
+      gap: 0.6rem;
+      align-items: center;
+      padding-top: 0.85rem;
+      border-top: 1px solid rgba(29, 77, 145, 0.12);
+    }
+    .btn-card-explore {
+      flex: 1;
+      background: #f1f5f9;
+      color: var(--archive-navy);
+      border: 1px solid #cbd5e1;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 0.55rem 0.8rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+    }
+    .btn-card-explore:hover {
+      background: var(--archive-navy);
+      color: #fff;
+    }
+    .btn-card-live {
+      background: var(--archive-blue);
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 0.55rem 0.9rem;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+    }
+
+    .cat-cta-section {
+      margin-top: 3.5rem;
+      border-top: 1px solid var(--archive-line);
+      padding-top: 2.5rem;
+    }
+    .cat-cta-card {
+      background: var(--archive-surface);
+      border: 1px solid var(--archive-line);
+      border-radius: var(--radius-md);
+      padding: 2rem;
+      text-align: center;
+    }
+    .cat-cta-card h3 {
+      font-size: 1.45rem;
+      margin-bottom: 0.5rem;
+    }
+    .cat-cta-card p {
+      color: var(--archive-muted);
+      font-size: 0.92rem;
+      margin-bottom: 1.25rem;
+    }
+    .btn-cat-roadmap {
+      background: var(--archive-navy);
+      color: #fff;
+      text-decoration: none;
+      padding: 0.65rem 1.4rem;
+      font-size: 0.88rem;
+      font-weight: 700;
+      border-radius: var(--radius-sm);
+      display: inline-block;
+    }
+
+    /* DRAWER & FOOTER (Reutilizados) */
+    .drawer-backdrop {
+      position: fixed; inset: 0; background: rgba(4, 26, 55, 0.4);
+      backdrop-filter: blur(2px); z-index: 998; opacity: 0; pointer-events: none; transition: opacity 0.25s ease;
+    }
+    .drawer-backdrop.active { opacity: 1; pointer-events: auto; }
+    .slide-drawer {
+      position: fixed; top: 0; right: 0; bottom: 0; width: min(580px, 94vw);
+      background: #ffffff; z-index: 999; box-shadow: -10px 0 35px rgba(6, 35, 74, 0.16);
+      display: flex; flex-direction: column; transform: translateX(100%); transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .slide-drawer.active { transform: translateX(0); }
+    .drawer-header { background: var(--archive-paper); padding: 1.5rem; border-bottom: 1px solid var(--archive-line); }
+    .drawer-header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+    .drawer-meta-badges { display: flex; gap: 8px; align-items: center; }
+    .drawer-code { background: var(--archive-navy); color: #fff; font-size: 0.78rem; font-weight: 750; padding: 3px 8px; border-radius: 4px; }
+    .drawer-category-badge { font-size: 0.75rem; font-weight: 650; color: var(--archive-navy); background: #eef4fb; padding: 2px 8px; border-radius: 4px; }
+    .drawer-status-badge { font-size: 0.75rem; font-weight: 650; color: var(--archive-mint); }
+    .drawer-close-btn { background: none; border: 1px solid var(--archive-line); width: 32px; height: 32px; border-radius: 50%; font-size: 1.25rem; color: var(--archive-muted); cursor: pointer; }
+    .drawer-title { font-size: 1.65rem; margin-bottom: 0.5rem; line-height: 1.2; }
+    .drawer-desc { color: var(--archive-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 1.2rem; }
+    .drawer-cta-bar { display: flex; gap: 0.75rem; }
+    .drawer-btn-primary { background: var(--archive-blue); color: #fff; text-decoration: none; padding: 0.6rem 1.2rem; font-size: 0.85rem; font-weight: 700; border-radius: var(--radius-sm); }
+    .drawer-body { flex: 1; overflow-y: auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 1.75rem; }
+    .drawer-section-title { font-size: 1.15rem; margin-bottom: 0.6rem; color: var(--archive-navy); }
+    .drawer-origin-text { font-size: 0.88rem; line-height: 1.6; color: var(--archive-muted); background: #fbf9f4; padding: 0.85rem 1rem; border-left: 3px solid var(--archive-blue); }
+    .drawer-section-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+    .drawer-roadmap-count { font-size: 0.78rem; color: var(--archive-muted); }
+    .drawer-roadmap-tabs { display: flex; gap: 4px; background: #f1f5f9; padding: 3px; border-radius: var(--radius-sm); margin-bottom: 1rem; }
+    .dr-tab { flex: 1; background: transparent; border: none; padding: 0.35rem; font-size: 0.75rem; font-weight: 650; color: var(--archive-muted); cursor: pointer; border-radius: 3px; }
+    .dr-tab.active { background: #ffffff; color: var(--archive-navy); }
+    .drawer-roadmap-list { display: flex; flex-direction: column; gap: 0.75rem; }
+    .drawer-item-card { border: 1px solid var(--archive-line); border-radius: var(--radius-sm); padding: 0.85rem; background: #ffffff; }
+    .drawer-item-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem; }
+    .drawer-item-title { font-weight: 700; font-size: 0.88rem; color: var(--archive-ink); }
+    .drawer-item-desc { font-size: 0.8rem; color: var(--archive-muted); line-height: 1.45; }
+    .drawer-b2g-box { background: #edf4fb; border: 1px solid #bfdbfe; border-radius: var(--radius-md); padding: 1.25rem; }
+    .b2g-box-title { font-size: 0.98rem; color: var(--archive-navy); margin-bottom: 0.35rem; font-weight: 750; font-family: var(--font-sans); }
+    .b2g-box-text { font-size: 0.84rem; color: var(--archive-muted); line-height: 1.5; margin-bottom: 0.75rem; }
+    .b2g-box-link { font-size: 0.84rem; font-weight: 750; color: var(--archive-blue); text-decoration: none; }
+
+    .site-footer { background: var(--archive-navy-deep); color: #edf4fb; padding: 3rem 1.5rem 2.5rem 1.5rem; margin-top: auto; border-top: 1px solid #245486; }
+    .footer-shell { max-width: 1280px; margin: 0 auto; }
+    .footer-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 2.5rem; }
+    .footer-brand strong { font-size: 1.1rem; display: block; margin-bottom: 0.5rem; color: #ffffff; }
+    .footer-brand p { font-size: 0.82rem; color: #a5b5c9; }
+    .footer-social { margin-top: 0.85rem; font-size: 0.82rem; }
+    .footer-social a { color: #cbd7e5; text-decoration: none; }
+    .footer-nav { display: flex; flex-direction: column; gap: 0.6rem; }
+    .footer-nav a { color: #cbd7e5; text-decoration: none; font-size: 0.82rem; }
+    .footer-meta { font-size: 0.78rem; color: #7e9fc5; text-align: right; }
   </style>
 
-  <script is:inline define:vars={{ filteredTools, category }}>
-    let currentView = 'catalog';
-    let focusedProject = null;
-    let searchQuery = '';
+  <script is:inline define:vars={{ toolsData }}>
+    let activeDrawerIndex = -1;
+    let activeDrawerTab = 'shipped';
 
-    function initFromUrl() {
-      const params = new URLSearchParams(window.location.search);
-      const viewParam = params.get('view') || params.get('tab');
-      if (viewParam === 'roadmap') currentView = 'roadmap';
-      
-      const pParam = params.get('p') || params.get('tool');
-      if (pParam) {
-        const match = filteredTools.find(t => t.code.toLowerCase() === pParam.toLowerCase() || t.id.toLowerCase() === pParam.toLowerCase());
-        if (match) focusedProject = match.code;
-      }
-      syncView();
-    }
+    function openDrawerByCode(code) {
+      const idx = toolsData.findIndex(t => t.code === code);
+      if (idx !== -1) {
+        activeDrawerIndex = idx;
+        const tool = toolsData[idx];
+        document.getElementById('drawerCode').textContent = tool.code;
+        document.getElementById('drawerCategory').textContent = tool.category.toUpperCase();
+        document.getElementById('drawerStatus').textContent = `● ${tool.statusText}`;
+        document.getElementById('drawerTitle').textContent = tool.name;
+        document.getElementById('drawerDesc').textContent = tool.desc;
+        document.getElementById('drawerOrigin').textContent = tool.origin;
 
-    function syncUrl() {
-      const params = new URLSearchParams();
-      if (currentView !== 'catalog') params.set('view', currentView);
-      if (focusedProject) params.set('p', focusedProject);
-      const newUrl = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
-      history.replaceState(null, '', newUrl);
-    }
-
-    window.switchView = function(view) {
-      currentView = view;
-      syncView();
-      syncUrl();
-    };
-
-    function syncView() {
-      document.getElementById('tabBtnCatalog').classList.toggle('active', currentView === 'catalog');
-      document.getElementById('tabBtnRoadmap').classList.toggle('active', currentView === 'roadmap');
-
-      document.getElementById('catalogView').style.display = currentView === 'catalog' ? 'block' : 'none';
-      document.getElementById('roadmapView').style.display = currentView === 'roadmap' ? 'block' : 'none';
-
-      updateFocusBanner();
-      if (currentView === 'catalog') renderCatalog();
-      else renderRoadmap();
-    }
-
-    window.setProjectFocus = function(projectCode) {
-      focusedProject = projectCode;
-      document.getElementById('projectSelector').value = projectCode || 'all';
-      updateFocusBanner();
-      if (currentView === 'catalog') renderCatalog();
-      else renderRoadmap();
-      syncUrl();
-    };
-
-    window.clearProjectFocus = function() {
-      focusedProject = null;
-      document.getElementById('projectSelector').value = 'all';
-      updateFocusBanner();
-      if (currentView === 'catalog') renderCatalog();
-      else renderRoadmap();
-      syncUrl();
-    };
-
-    function updateFocusBanner() {
-      const banner = document.getElementById('projectFocusBanner');
-      if (focusedProject) {
-        const tool = filteredTools.find(t => t.code === focusedProject);
-        document.getElementById('projectFocusLabel').innerText = `${tool ? tool.code + ' — ' + tool.name : focusedProject}`;
-        banner.style.display = 'flex';
-      } else {
-        banner.style.display = 'none';
-      }
-    }
-
-    window.handleSearch = function(q) {
-      searchQuery = q.trim().toLowerCase();
-      if (currentView === 'catalog') renderCatalog();
-      else renderRoadmap();
-    };
-
-    window.handleProjectSelect = function(val) {
-      if (val === 'all') window.clearProjectFocus();
-      else window.setProjectFocus(val);
-    };
-
-    function getTools() {
-      return filteredTools.filter(t => {
-        if (focusedProject && t.code !== focusedProject) return false;
-        if (searchQuery) {
-          return (t.name + ' ' + t.desc + ' ' + t.origin + ' ' + t.code).toLowerCase().includes(searchQuery);
+        const liveBtn = document.getElementById('drawerLiveBtn');
+        if (tool.url) {
+          liveBtn.href = tool.url;
+          liveBtn.style.display = 'inline-flex';
+        } else {
+          liveBtn.style.display = 'none';
         }
-        return true;
-      });
+
+        const totalHitos = (tool.roadmap.shipped?.length || 0) + (tool.roadmap.now?.length || 0) + (tool.roadmap.next?.length || 0) + (tool.roadmap.later?.length || 0);
+        document.getElementById('drawerRoadmapCount').textContent = `${totalHitos} hitos documentados`;
+
+        renderDrawerRoadmapTab(tool, activeDrawerTab);
+
+        document.getElementById('drawerBackdrop').classList.add('active');
+        document.getElementById('slideDrawer').classList.add('active');
+        document.getElementById('slideDrawer').setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+      }
     }
 
-    function renderCatalog() {
-      const grid = document.getElementById('toolsGrid');
-      grid.innerHTML = '';
-      const tools = getTools();
+    function closeDrawer() {
+      document.getElementById('drawerBackdrop').classList.remove('active');
+      document.getElementById('slideDrawer').classList.remove('active');
+      document.getElementById('slideDrawer').setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      activeDrawerIndex = -1;
+    }
 
-      if (tools.length === 0) {
-        grid.innerHTML = `
-          <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; background: #fff; border-radius: 8px; border: 1px dashed var(--border);">
-            <p style="color: var(--muted); font-size: 1rem;">No se encontraron herramientas con los filtros actuales.</p>
-            <button class="btn-reset-focus" style="margin-top: 0.75rem;" onclick="clearProjectFocus()">Restablecer filtros</button>
-          </div>
-        `;
+    function switchDrawerRoadmapTab(tab) {
+      activeDrawerTab = tab;
+      document.querySelectorAll('.dr-tab').forEach(b => {
+        b.classList.toggle('active', b.dataset.drtab === tab);
+      });
+      if (activeDrawerIndex !== -1) {
+        renderDrawerRoadmapTab(toolsData[activeDrawerIndex], tab);
+      }
+    }
+
+    function renderDrawerRoadmapTab(tool, tab) {
+      const items = tool.roadmap[tab] || [];
+      const list = document.getElementById('drawerRoadmapList');
+      if (!items.length) {
+        list.innerHTML = `<p style="font-size: 0.8rem; color: #94a3b8; font-style: italic; padding: 0.75rem 0;">No hay hitos registrados en este estado.</p>`;
         return;
       }
-
-      tools.forEach(tool => {
-        const card = document.createElement('article');
-        card.style.cssText = "background: var(--paper); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between;";
-        const totalRoadmapItems = (tool.roadmap.shipped?.length || 0) + (tool.roadmap.now?.length || 0) + (tool.roadmap.next?.length || 0) + (tool.roadmap.later?.length || 0);
-
-        const badgeStyle = tool.status === 'prod' ? 'background: #dcfce7; color: var(--success);' : (tool.status === 'mov' ? 'background: #e0f2fe; color: var(--navy-light);' : 'background: #fef3c7; color: var(--warning);');
-
-        card.innerHTML = `
-          <div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-              <span style="font-family: var(--font-mono); font-size: 0.75rem; font-weight: 600; color: var(--navy-light);">[${tool.code} · ${tool.category.toUpperCase()}]</span>
-              <span style="font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.5rem; border-radius: 4px; text-transform: uppercase; ${badgeStyle}">${tool.statusText}</span>
-            </div>
-            <h2 style="font-size: 1.15rem; color: var(--navy); font-weight: 700; margin-bottom: 0.4rem; line-height: 1.3;">${tool.name}</h2>
-            <p style="font-size: 0.88rem; color: var(--text); margin-bottom: 0.75rem; line-height: 1.45;">${tool.desc}</p>
-            <div style="background: #f1f5f9; border-left: 3px solid var(--navy-light); padding: 0.5rem 0.65rem; font-size: 0.78rem; color: var(--muted); border-radius: 0 4px 4px 0; margin-bottom: 0.85rem; line-height: 1.4;">
-              <strong style="color: var(--navy); font-weight: 600;">Detonante institucional:</strong> ${tool.origin}
-            </div>
+      list.innerHTML = items.map(i => `
+        <div class="drawer-item-card">
+          <div class="drawer-item-top">
+            <span class="drawer-item-title">${i.title}</span>
+            <span style="font-size: 0.65rem; background: #f1f5f9; padding: 1px 5px; border-radius: 3px; font-weight: 650; color: #475569;">${i.tag || 'General'}</span>
           </div>
-          
-          <div style="border-top: 1px solid var(--border); padding-top: 0.85rem; margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.6rem;">
-            <div style="display: flex; gap: 0.5rem; align-items: center;">
-              <a href="${tool.url}" target="_blank" style="background: var(--navy); color: #fff; border-radius: 6px; padding: 0.4rem 0.8rem; text-decoration: none; font-size: 0.82rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.3rem;">Abrir solución ↗</a>
-              <button style="background: #f1f5f9; border: 1px solid var(--border-strong); color: var(--navy); border-radius: 6px; padding: 0.4rem 0.75rem; font-size: 0.82rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.3rem;" onclick="goToToolRoadmap('${tool.code}')">
-                🗺️ Roadmap (${totalRoadmapItems})
-              </button>
-            </div>
-
-            <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem;">
-              <div style="display: flex; gap: 0.35rem;">
-                <button id="like-${tool.id}" onclick="handleVote('${tool.id}', 'like')" style="background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 0.25rem 0.5rem; font-size: 0.78rem; cursor: pointer; display: inline-flex; align-items: center; gap: 0.3rem; color: var(--muted); font-weight: 600;">
-                  ❤️ <span id="count-like-${tool.id}">${tool.likes}</span>
-                </button>
-                <button id="dislike-${tool.id}" onclick="handleVote('${tool.id}', 'dislike')" style="background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 0.25rem 0.5rem; font-size: 0.78rem; cursor: pointer; display: inline-flex; align-items: center; gap: 0.3rem; color: var(--muted); font-weight: 600;">
-                  👎 <span id="count-dislike-${tool.id}">${tool.dislikes}</span>
-                </button>
-              </div>
-              <div style="display: flex; gap: 0.5rem;">
-                <button onclick="openFeedback('${tool.id}', '${tool.name}', 'duda')" style="background: none; border: none; color: var(--navy-light); font-size: 0.78rem; font-weight: 500; cursor: pointer;">❓ Tengo dudas</button>
-                <button onclick="openFeedback('${tool.id}', '${tool.name}', 'obs')" style="background: none; border: none; color: var(--navy-light); font-size: 0.78rem; font-weight: 500; cursor: pointer;">💬 Observación</button>
-              </div>
-            </div>
-          </div>
-        `;
-        grid.appendChild(card);
-      });
-    }
-
-    window.goToToolRoadmap = function(projectCode) {
-      window.setProjectFocus(projectCode);
-      window.switchView('roadmap');
-      window.scrollTo({ top: 200, behavior: 'smooth' });
-    };
-
-    function renderRoadmap() {
-      const tools = getTools();
-
-      const shippedContainer = document.getElementById('colShippedCards');
-      const nowContainer = document.getElementById('colNowCards');
-      const nextContainer = document.getElementById('colNextCards');
-      const laterContainer = document.getElementById('colLaterCards');
-
-      shippedContainer.innerHTML = '';
-      nowContainer.innerHTML = '';
-      nextContainer.innerHTML = '';
-      laterContainer.innerHTML = '';
-
-      let cShipped = 0, cNow = 0, cNext = 0, cLater = 0;
-
-      tools.forEach(tool => {
-        (tool.roadmap.shipped || []).forEach(item => {
-          cShipped++;
-          shippedContainer.appendChild(createRoadmapCardElement(tool, item));
-        });
-        (tool.roadmap.now || []).forEach(item => {
-          cNow++;
-          nowContainer.appendChild(createRoadmapCardElement(tool, item));
-        });
-        (tool.roadmap.next || []).forEach(item => {
-          cNext++;
-          nextContainer.appendChild(createRoadmapCardElement(tool, item));
-        });
-        (tool.roadmap.later || []).forEach(item => {
-          cLater++;
-          laterContainer.appendChild(createRoadmapCardElement(tool, item));
-        });
-      });
-
-      document.getElementById('countShipped').innerText = cShipped;
-      document.getElementById('countNow').innerText = cNow;
-      document.getElementById('countNext').innerText = cNext;
-      document.getElementById('countLater').innerText = cLater;
-    }
-
-    function createRoadmapCardElement(tool, item) {
-      const card = document.createElement('div');
-      card.style.cssText = "background: var(--paper); border: 1px solid var(--border); border-radius: 6px; padding: 0.85rem; box-shadow: 0 1px 2px rgba(0,0,0,0.03);";
-      const impactStyle = item.impact === 'alto' ? 'background: #fee2e2; color: #991b1b;' : (item.impact === 'medio' ? 'background: #e0f2fe; color: #075985;' : 'background: #f3f4f6; color: #4b5563;');
-
-      card.innerHTML = `
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.35rem;">
-          <span style="font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700; color: var(--navy-light);">[${tool.code} · ${tool.name}]</span>
-          ${item.impact ? `<span style="font-size: 0.65rem; font-weight: 700; padding: 0.15rem 0.35rem; border-radius: 3px; text-transform: uppercase; ${impactStyle}">${item.impact}</span>` : ''}
+          <p class="drawer-item-desc">${i.desc}</p>
         </div>
-        <h4 style="font-size: 0.9rem; font-weight: 700; color: var(--navy); line-height: 1.3; margin-bottom: 0.35rem;">${item.title}</h4>
-        ${item.desc ? `<p style="font-size: 0.8rem; color: var(--muted); line-height: 1.4; margin-bottom: 0.5rem;">${item.desc}</p>` : ''}
-        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.72rem; padding-top: 0.4rem; border-top: 1px dashed var(--border); color: var(--muted);">
-          <span>${item.tag ? '🏷️ ' + item.tag : tool.category}</span>
-          <button onclick="setProjectFocus('${tool.code}')" style="background: none; border: none; color: var(--navy-light); cursor: pointer; font-weight: 600; font-family: var(--font-mono);" title="Filtrar solo este producto">
-            Aislar ${tool.code} →
-          </button>
-        </div>
-      `;
-      return card;
+      `).join('');
     }
 
-    window.handleVote = function(id, type) {
-      const tool = filteredTools.find(t => t.id === id);
-      if (!tool) return;
-      if (type === 'like') {
-        tool.likes++;
-        document.getElementById(`count-like-${id}`).innerText = tool.likes;
-      } else {
-        tool.dislikes++;
-        document.getElementById(`count-dislike-${id}`).innerText = tool.dislikes;
-      }
-      if (window.umami) {
-        window.umami.track('catalogo_voto', { herramienta: id, codigo: tool.code, tipo: type });
-      }
-    };
-
-    window.openFeedback = function(id, name, type) {
-      document.getElementById('modalToolId').value = id;
-      document.getElementById('modalFeedbackType').value = type;
-      document.getElementById('modalTitle').innerText = (type === 'duda' ? '❓ Pregunta técnica sobre ' : '💬 Observación sobre ') + name;
-      document.getElementById('modalInputLabel').innerText = (type === 'duda' ? '¿Cuál es tu duda metodológica, normativa o técnica?' : '¿Qué caso de borde o mejora propones?');
-      document.getElementById('feedbackModal').classList.add('active');
-    };
-
-    window.closeModal = function() {
-      document.getElementById('feedbackModal').classList.remove('active');
-    };
-
-    window.handleFeedbackSubmit = function(e) {
-      e.preventDefault();
-      const toolId = document.getElementById('modalToolId').value;
-      const email = document.getElementById('modalEmail').value;
-      alert(`¡Gracias! Mensaje sobre "${toolId}" registrado para respuesta directa a ${email}.`);
-      window.closeModal();
-    };
-
-    window.handleBuzonSubmit = function(e) {
-      e.preventDefault();
-      const correo = document.getElementById('correo').value;
-      alert(`¡Requerimiento recibido en el Buzón de Ideas! Nos pondremos en contacto con ${correo}.`);
-      e.target.reset();
-    };
-
-    window.addEventListener('DOMContentLoaded', () => {
-      initFromUrl();
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeDrawer();
     });
   </script>
 </Layout>
